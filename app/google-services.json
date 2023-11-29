@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "327382640223",
+    "project_id": "fir-test1-b193d",
+    "storage_bucket": "fir-test1-b193d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327382640223:android:5495a2f1f9a2bd2702ddea",
+        "android_client_info": {
+          "package_name": "com.example.firebasetest1"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAn-zYJhi5d_874gpCSHpAnmiegD-yT_IY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:327382640223:android:d0b0f08486f5913002ddea",
+        "android_client_info": {
+          "package_name": "com.example.gameboy"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAn-zYJhi5d_874gpCSHpAnmiegD-yT_IY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
