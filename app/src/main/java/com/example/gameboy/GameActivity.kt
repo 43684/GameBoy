@@ -7,7 +7,7 @@ import androidx.fragment.app.commit
 import com.example.gameboy.databinding.ActivityGameBinding
 import com.example.gameboy.databinding.ActivityMainBinding
 
-class GameActivity : AppCompatActivity() {
+class GameActivity : AppCompatActivity(), PongFragment.GameListener, GameSelectFragment.GameListener {
 
     lateinit var binding: ActivityGameBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -17,15 +17,22 @@ class GameActivity : AppCompatActivity() {
 
         setContentView(binding.root)
 
-        binding.knapp.setOnClickListener(View.OnClickListener {
+
             supportFragmentManager.commit {
-                replace(R.id.frame3, PongFragment())
+                replace(R.id.frame3, GameSelectFragment())
             }
-        })
-        binding.knapp2.setOnClickListener(View.OnClickListener {
-            supportFragmentManager.commit {
-                replace(R.id.frame3, HockeyFragment())
-            }
-        })
+
     }
+
+    override fun startPong(){
+        supportFragmentManager.commit {
+            replace(R.id.frame3, PlayPongFragment())
+        }
+    }
+    override fun startPongMenu(){
+        supportFragmentManager.commit {
+            replace(R.id.frame3, PongFragment())
+        }
+    }
+
 }

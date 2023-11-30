@@ -1,18 +1,18 @@
 package com.example.gameboy
+
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.commit
 import com.example.gameboy.databinding.FragmentPongBinding
+import com.example.gameboy.databinding.FragmentSelectGameBinding
 
-class PongFragment : Fragment() {
-    lateinit var binding: FragmentPongBinding
+class GameSelectFragment: Fragment() {
 
+    lateinit var binding: FragmentSelectGameBinding
     var listener: GameListener? = null
-
 
     override fun onAttach(context: Context){
         super.onAttach(context)
@@ -25,20 +25,24 @@ class PongFragment : Fragment() {
         }
 
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = FragmentPongBinding.inflate(layoutInflater)
+        binding = FragmentSelectGameBinding.inflate(layoutInflater)
+
         return binding.root
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.startButton.setOnClickListener(View.OnClickListener {
-            listener?.startPong()
+        binding.btn1.setOnClickListener(View.OnClickListener {
+            listener?.startPongMenu()
         })
     }
     override fun onDetach(){
@@ -47,9 +51,7 @@ class PongFragment : Fragment() {
     }
 
     interface GameListener{
-        fun startPong()
+        fun startPongMenu()
 
     }
-
-
 }
