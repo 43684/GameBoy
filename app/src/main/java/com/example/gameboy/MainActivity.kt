@@ -12,9 +12,8 @@ class MainActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = ActivityMainBinding.inflate(layoutInflater) // Replace YourBindingClass with your actual binding class
+        binding = ActivityMainBinding.inflate(layoutInflater)
 
-        // Use the binding to set up your activity
         setContentView(binding.root)
 
         binding.button5.setOnClickListener(View.OnClickListener {

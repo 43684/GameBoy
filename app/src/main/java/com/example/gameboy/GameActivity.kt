@@ -15,7 +15,6 @@ class GameActivity : AppCompatActivity() {
 
         binding = ActivityGameBinding.inflate(layoutInflater) // Replace YourBindingClass with your actual binding class
 
-        // Use the binding to set up your activity
         setContentView(binding.root)
 
         binding.knapp.setOnClickListener(View.OnClickListener {
