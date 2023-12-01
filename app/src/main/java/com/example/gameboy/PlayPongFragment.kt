@@ -23,13 +23,11 @@ class PlayPongFragment : Fragment() {
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        // Inflate the binding layout
+
         binding = FragmentPlayPongBinding.inflate(inflater)
 
-        // Create an instance of your custom GameView
         val gameView = GameView(requireContext())
 
-        // Set the GameView as the content view for the fragment
         return gameView
     }
 }
