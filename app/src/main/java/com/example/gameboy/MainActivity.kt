@@ -9,7 +9,6 @@ import com.example.gameboy.databinding.ActivityMainBinding
 
 import com.google.firebase.auth.FirebaseAuth
 
-import com.example.gameboy.databinding.ActivityMainBinding
 
 class MainActivity : AppCompatActivity() {
 
