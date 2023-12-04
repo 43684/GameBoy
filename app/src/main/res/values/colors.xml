@@ -8,6 +8,9 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
 
+    <color name="rod">#F44336</color>
+
 
     <color name="yellow">#FFC801</color>
+
 </resources>
