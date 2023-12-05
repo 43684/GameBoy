@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 
 class Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ): Fragment(){
 
-    var listener: PongFragment.GameListener? = null
+    var listener: GameListener? = null
     var paint = Paint()
 
 
@@ -16,7 +16,7 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
         super.onAttach(context)
 
         try{
-            listener = context as PongFragment.GameListener
+            listener = context as GameListener
             println("Successful implementation")
         } catch (e: Exception){
             println("Failed implementation")
@@ -40,7 +40,7 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
     }
 
     private fun resetPosition() {
-        listener?.startPong()
+        listener?.startPongMenu()
     }
 
     fun update(){
@@ -57,7 +57,7 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
 
 
     interface GameListener{
-
+        fun startPongMenu()
 
     }
 }

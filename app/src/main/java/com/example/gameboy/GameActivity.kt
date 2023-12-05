@@ -6,7 +6,7 @@ import androidx.fragment.app.commit
 import com.example.gameboy.databinding.ActivityGameBinding
 
 class GameActivity : AppCompatActivity(), PongFragment.GameListener,
-    GameSelectFragment.GameListener {
+    GameSelectFragment.GameListener, Ball.GameListener {
 
     lateinit var binding: ActivityGameBinding
     override fun onCreate(savedInstanceState: Bundle?) {
