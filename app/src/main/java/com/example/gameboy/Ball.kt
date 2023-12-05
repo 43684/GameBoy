@@ -32,15 +32,11 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
             speedX *= -1
         }
         if (posY - size <0){
-           resetPosition()
+            listener?.startPongMenu()
         }
         if (posY + size > bounds.bottom){
-            resetPosition()
+            listener?.startPongMenu()
         }
-    }
-
-    private fun resetPosition() {
-        listener?.startPongMenu()
     }
 
     fun update(){

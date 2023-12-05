@@ -52,7 +52,7 @@ class SignInActivity : AppCompatActivity() {
         super.onStart()
 
         if(firebaseAuth.currentUser != null){
-            val intent = Intent(this, MainActivity::class.java)
+            val intent = Intent(this, GameActivity::class.java)
             startActivity(intent)
         }
     }
@@ -73,7 +73,7 @@ class SignInActivity : AppCompatActivity() {
         firebaseAuth = FirebaseAuth.getInstance()
         firebaseAuth.signInWithEmailAndPassword(email,password)
             .addOnSuccessListener {
-                val intent = Intent(this, MainActivity::class.java)
+                val intent = Intent(this, GameActivity::class.java)
                 startActivity(intent)
                 finish()
             }.addOnFailureListener{error->
