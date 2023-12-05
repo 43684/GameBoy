@@ -42,5 +42,7 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
     fun draw(canvas: Canvas?){
 
         canvas?.drawCircle(posX, posY, size, paint)
+        
+
     }
 }

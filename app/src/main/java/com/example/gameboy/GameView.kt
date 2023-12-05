@@ -14,7 +14,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private var running = false
     lateinit var canvas: Canvas
     private lateinit var ball1: Ball
-    private lateinit var ball2: Ball
+    private lateinit var ball2: Padel
     private var bounds = Rect()
     var mHolder: SurfaceHolder? = holder
 
@@ -27,7 +27,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     private fun setup() {
         ball1 = Ball(this.context, 100f, 100f, 50f, -5f, 5f)
-        ball2 = Ball(this.context, 100f, 300f, 50f, 5f, 0f)
+        ball2 = Padel(this.context, 100f, 300f, 50f, 5f, 0f)
         //  ball1.posX = 100f
         //        ball1.posY = 100f
         //        ball2.posX = 100f
@@ -36,13 +36,13 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         ball2.paint.color = Color.GREEN
     }
 
-    fun ball(b1: Ball, b2: Ball) {
+    fun ball(b1: Ball, b2: Padel) {
         ball1.speedY *= -1
         ball2.speedY = 0f
         //ball1.paint.color = Color.YELLOW
     }
 
-    fun intersects(b1: Ball, b2: Ball) {
+    fun intersects(b1: Ball, b2: Padel) {
         if (Math.sqrt(
                 Math.pow(
                     b1.posX - b2.posX.toDouble(),
