@@ -4,11 +4,25 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
+import androidx.fragment.app.Fragment
 
-class Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ){
+class Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ): Fragment(){
 
+    var listener: PongFragment.GameListener? = null
     var paint = Paint()
 
+
+    override fun onAttach(context: Context){
+        super.onAttach(context)
+
+        try{
+            listener = context as PongFragment.GameListener
+            println("Successful implementation")
+        } catch (e: Exception){
+            println("Failed implementation")
+        }
+
+    }
     fun checkBounds(bounds: Rect){
         if (posX - size <0){
             this.speedX *= -1
@@ -18,12 +32,17 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
             speedX *= -1
         }
         if (posY - size <0){
-            speedY *= -1
+           resetPosition()
         }
         if (posY + size > bounds.bottom){
-            speedY *= -1
+            resetPosition()
         }
     }
+
+    private fun resetPosition() {
+        listener?.startPong()
+    }
+
     fun update(){
 
         posY += speedY
@@ -34,5 +53,11 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
     fun draw(canvas: Canvas?){
 
         canvas?.drawCircle(posX, posY, size, paint)
+    }
+
+
+    interface GameListener{
+
+
     }
 }

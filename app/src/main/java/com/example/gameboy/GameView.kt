@@ -29,7 +29,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     }
 
     private fun setup() {
-        ball1 = Ball(this.context, 100f, 100f, 50f, -5f, 5f)
+        ball1 = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
         padel1 = Paddle(this.context, 100f, 100f, 150f, 10f, 5f, 5f)
         padel2 = Paddle(this.context, 100f, 1200f, 150f, 10f, 5f, 5f)
 
