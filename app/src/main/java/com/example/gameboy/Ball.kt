@@ -7,14 +7,6 @@ import android.graphics.Rect
 
 class Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ){
 
-
-    //var posX = 0f
-    //    var posY = 0f
-    //    var paint = Paint()
-    //    var size = 50f
-    //    var speed = 5f
-
-
     var paint = Paint()
 
     fun checkBounds(bounds: Rect){

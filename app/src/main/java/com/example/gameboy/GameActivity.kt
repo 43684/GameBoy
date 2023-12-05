@@ -19,7 +19,6 @@ class GameActivity : AppCompatActivity(), PongFragment.GameListener,
         supportFragmentManager.commit {
             replace(R.id.frame3, GameSelectFragment())
         }
-
     }
 
     override fun startPong() {

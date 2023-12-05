@@ -13,8 +13,9 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private var thread: Thread? = null
     private var running = false
     lateinit var canvas: Canvas
-    private lateinit var ball1: Ball
-    private lateinit var ball2: Ball
+    private lateinit var ball: Ball
+    private lateinit var paddle1: Paddle
+    private lateinit var paddle2: Paddle
     private var bounds = Rect()
     var mHolder: SurfaceHolder? = holder
 
@@ -26,23 +27,21 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     }
 
     private fun setup() {
-        ball1 = Ball(this.context, 100f, 100f, 50f, -5f, 5f)
-        ball2 = Ball(this.context, 100f, 300f, 50f, 5f, 0f)
-        //  ball1.posX = 100f
-        //        ball1.posY = 100f
-        //        ball2.posX = 100f
-        //        ball2.posY = 400f
-        ball1.paint.color = Color.RED
-        ball2.paint.color = Color.GREEN
+        ball = Ball(this.context, 100f, 100f, 50f, -5f, 5f)
+        paddle1 = Paddle(this.context, 100f, 200f, 130f, 5f, 0f)
+        paddle2 = Paddle(this.context, 100f, 1000f, 130f, 5f, 0f)
+        ball.paint.color = Color.RED
+        paddle1.paint.color = Color.BLACK
+        paddle2.paint.color = Color.BLACK
     }
 
-    fun ball(b1: Ball, b2: Ball) {
-        ball1.speedY *= -1
-        ball2.speedY = 0f
-        //ball1.paint.color = Color.YELLOW
+    fun ball(b1: Ball, b2: Paddle) {
+        ball.speedY *= -1
+        paddle1.speedY = 0f
+        paddle2.speedY = 0f
     }
 
-    fun intersects(b1: Ball, b2: Ball) {
+    fun intersects(b1: Ball, b2: Paddle) {
         if (Math.sqrt(
                 Math.pow(
                     b1.posX - b2.posX.toDouble(),
@@ -53,6 +52,17 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             ball(b1, b2)
         }
     }
+
+    private fun handleCollision(player: Paddle?, ball: Ball?) {
+        ball!!.speedX = -ball.speedX * 1.05f
+        if (player === this.paddle1) {
+            ball.cx = player!!.bounds.right + ball.radius
+        } else if (player === mOpponent) {
+            ball.cx = mOpponent!!.bounds.left - ball.radius
+            PHY_RACQUET_SPEED *= 1.05f
+        }
+    }
+
 
     fun start() {
         running = true
@@ -68,26 +78,29 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             e.printStackTrace()
         }
     }
-
     fun update() {
-        ball1.update()
-        ball2.update()
+        ball.update()
+        paddle1.update()
+        paddle2.update()
     }
 
     fun draw() {
         canvas = mHolder!!.lockCanvas()
-        canvas.drawColor(Color.BLUE)
-        ball1.draw(canvas)
-        ball2.speedY = 0f;
-        ball2.draw(canvas)
+        canvas.drawColor(Color.WHITE)
+        ball.draw(canvas)
+        paddle1.speedY = 0f
+        paddle1.draw(canvas)
+        paddle2.speedY = 0f
+        paddle2.draw(canvas)
         mHolder!!.unlockCanvasAndPost(canvas)
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         val sX = event?.x.toString()
-        val sY = event?.y.toString()
-        ball2.posX = sX.toFloat()
-        ball2.posY = sY.toFloat()
+       // val sY = event?.y.toString()
+        paddle1.posX = sX.toFloat()
+        paddle2.posX = sX.toFloat()
+        //paddle.posY = sY.toFloat()
 
         return true
     }
@@ -109,8 +122,11 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         while (running) {
             update()
             draw()
-            ball1.checkBounds(bounds)
-            intersects(ball1, ball2)
+            ball.checkBounds(bounds)
+            paddle1.checkBounds(bounds)
+            paddle2.checkBounds(bounds)
+            intersects(ball, paddle1)
+            intersects(ball, paddle2)
         }
     }
 }
