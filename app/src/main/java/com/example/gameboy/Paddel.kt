@@ -6,39 +6,36 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.graphics.drawable.shapes.Shape
-class Paddle(context: Context, var posX: Float, var posY: Float, var width: Float, var height: Float, var speedY: Float) {
+class Paddle(context: Context, var posX: Float, var posY: Float, var width: Float, var height: Float, var speedX: Float, var speedY: Float) {
 
     var paint = Paint()
 
     fun checkBounds(bounds: Rect) {
-        if (posX - size < 0) {
-            this.speedX *= -1
-            this.posX += speedX * 2
-        }
-        if (posX + size > bounds.right) {
+        if (posX - width / 2 < 0) {
             speedX *= -1
+            posX = width / 2 // Adjusting the position to prevent sticking at the boundary
         }
-        if (posY - size < 0) {
+        if (posX + width / 2 > bounds.right) {
+            speedX *= -1
+            posX = bounds.right - width / 2 // Adjusting the position to prevent sticking at the boundary
+        }
+        if (posY - height / 2 < 0) {
             speedY *= -1
+            posY = height / 2 // Adjusting the position to prevent sticking at the boundary
         }
-        if (posY + size > bounds.bottom) {
+        if (posY + height / 2 > bounds.bottom) {
             speedY *= -1
+            posY = bounds.bottom - height / 2 // Adjusting the position to prevent sticking at the boundary
         }
+    }
+
+    fun drawPadel(canvas: Canvas?) {
+        canvas?.drawRect(posX - width / 2, posY - height / 2, posX + width / 2, posY + height / 2, paint)
     }
 
     fun update() {
 
-        posY += speedY
-        posX += speedX
+
     }
 
-    fun draw(canvas: Canvas?) {
-        canvas?.drawRect(
-            posX - width + height / 2,
-            posY - width + height / 6,
-            posX + width + height / 2,
-            posY + width + height / 6,
-            paint
-        )
-    }
 }
