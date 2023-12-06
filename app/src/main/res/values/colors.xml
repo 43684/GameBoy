@@ -12,5 +12,10 @@
 
 
     <color name="yellow">#FFC801</color>
+    <color name="vit">#D8CAC9</color>
+    <color name="rod1">#E25045</color>
+    <color name="svart">#2C2928</color>
+    <color name="ros">#DBADAA</color>
+    <color name="blue">#818C93</color>
 
 </resources>

@@ -13,16 +13,4 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-
-        android:id="@+id/textView"
-        android:layout_width="62dp"
-        android:layout_height="41dp"
-        android:layout_marginStart="44dp"
-        android:layout_marginTop="48dp"
-        android:text="Halloj"
-        app:layout_constraintStart_toStartOf="@+id/surfaceView"
-        app:layout_constraintTop_toTopOf="@+id/surfaceView" />
-
-
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,4 +4,10 @@
     <string name="highscore">Highscore\n</string>
     <string name="pong">Pong</string>
     <string name="hockey">Air hockey\n</string>
+    <string name="pong_button">Pong</string>
+    <string name="air_hockey_button">Air Hockey</string>
+    <string name="pick_your_game">Pick your game</string>
+    <string name="highscore_list">Highscore list</string>
+    <string name="play_pong">Play Pong</string>
+    <string name="log_out">Log out</string>
 </resources>

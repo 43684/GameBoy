@@ -30,16 +30,11 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     private fun setup() {
         ball1 = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
-        padel1 = Paddle(this.context, 100f, 100f, 150f, 10f, 5f, 5f)
-        padel2 = Paddle(this.context, 100f, 1200f, 150f, 10f, 5f, 5f)
-
-        //  ball1.posX = 100f
-        //        ball1.posY = 100f
-        //        ball2.posX = 100f
-        //        ball2.posY = 400f
+        padel1 = Paddle(this.context, 100f, 100f, 200f, 30f, 5f, 5f)
+        padel2 = Paddle(this.context, 100f, 1200f, 200f, 30f, 5f, 5f)
         ball1.paint.color = Color.RED
-        padel1.paint.color = Color.GREEN
-        padel2.paint.color = Color.BLACK
+        padel1.paint.color = Color.WHITE
+        padel2.paint.color = Color.WHITE
     }
 
     fun ball(b1: Ball, b2: Paddle) {
@@ -92,7 +87,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     fun draw() {
         canvas = mHolder!!.lockCanvas()
-        canvas.drawColor(Color.BLUE)
+        canvas.drawColor(Color.BLACK)
         ball1.draw(canvas)
         padel1.speedY = 0f;
         padel1.drawPadel(canvas)
