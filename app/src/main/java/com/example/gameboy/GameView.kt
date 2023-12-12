@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
+import android.os.Bundle
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -13,13 +14,12 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private var thread: Thread? = null
     private var running = false
     lateinit var canvas: Canvas
-    private lateinit var ball1: Ball
+    private lateinit var ball: Ball
     private lateinit var padel1: Paddle
     private lateinit var padel2: Paddle
     private var bounds = Rect()
     var mHolder: SurfaceHolder? = holder
-
-
+    var highscore = 0
 
     init {
         if (mHolder != null) {
@@ -27,18 +27,17 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
         setup()
     }
-
     private fun setup() {
-        ball1 = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
+        ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
         padel1 = Paddle(this.context, 100f, 100f, 200f, 30f, 5f, 5f)
         padel2 = Paddle(this.context, 100f, 1200f, 200f, 30f, 5f, 5f)
-        ball1.paint.color = Color.RED
+        ball.paint.color = Color.RED
         padel1.paint.color = Color.WHITE
         padel2.paint.color = Color.WHITE
     }
 
     fun ball(b1: Ball, b2: Paddle) {
-        ball1.speedY *= -1
+        ball.speedY *= -1
         padel1.speedY = 0f
         padel2.speedY = 0f
         //ball1.paint.color = Color.YELLOW
@@ -56,6 +55,16 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         if (distanceSquared <= (ball.size / 2) * (ball.size / 2)) {
             // Collision detected
             ball(ball, padel)
+            highscore ++
+            println(highscore)
+            val playPongFragment = PlayPongFragment()
+
+            // Pass input parameters to
+            val bundle = Bundle().apply {
+                putString("Score","$highscore")
+            }
+            playPongFragment.arguments = bundle
+
         }
     }
 
@@ -80,7 +89,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     }
 
     fun update() {
-        ball1.update()
+        ball.update()
         padel1.update()
         padel2.update()
     }
@@ -88,7 +97,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     fun draw() {
         canvas = mHolder!!.lockCanvas()
         canvas.drawColor(Color.BLACK)
-        ball1.draw(canvas)
+        ball.draw(canvas)
         padel1.speedY = 0f;
         padel1.drawPadel(canvas)
         padel2.speedY = 0f
@@ -101,10 +110,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         val sX = event?.x.toString()
         val sY = event?.y.toString()
         padel1.posX = sX.toFloat()
-        //padel1.posY = sY.toFloat()
         padel2.posX = sX.toFloat()
-        //padel2.posY = sY.toFloat()
-
 
         return true
     }
@@ -126,12 +132,12 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         while (running) {
             update()
             draw()
-            ball1.checkBounds(bounds)
+            ball.checkBounds(bounds)
             padel1.checkBounds(bounds)
             padel2.checkBounds(bounds)
 
-            intersects(ball1, padel1)
-            intersects(ball1, padel2)
+            intersects(ball, padel1)
+            intersects(ball, padel2)
         }
     }
 }

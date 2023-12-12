@@ -12,6 +12,7 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
 
     var listener: GameListener? = null
     var paint = Paint()
+    var highscore = 0
 
 
     override fun onAttach(context: Context){
@@ -32,12 +33,24 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
         }
         if (posX + size > bounds.right){
             speedX *= -1
+
         }
         if (posY - size <0){
-            listener?.startPongMenu()
+          //  listener?.startPongMenu()
+            posY = bounds.exactCenterY()
+            posX = bounds.exactCenterX()
+            speedX = 0f
+            speedY = 0f
+
+
         }
         if (posY + size > bounds.bottom){
-            listener?.startPongMenu()
+//            listener?.startPongMenu()
+            posY = bounds.exactCenterY()
+            posX = bounds.exactCenterX()
+            speedX = 0f
+            speedY = 0f
+
         }
     }
 

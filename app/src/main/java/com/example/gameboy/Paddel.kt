@@ -14,18 +14,22 @@ class Paddle(context: Context, var posX: Float, var posY: Float, var width: Floa
         if (posX - width / 2 < 0) {
             speedX *= -1
             posX = width / 2 // Adjusting the position to prevent sticking at the boundary
+            println("1")
         }
         if (posX + width / 2 > bounds.right) {
             speedX *= -1
             posX = bounds.right - width / 2 // Adjusting the position to prevent sticking at the boundary
+            println("2")
         }
         if (posY - height / 2 < 0) {
             speedY *= -1
             posY = height / 2 // Adjusting the position to prevent sticking at the boundary
+            println("3")
         }
         if (posY + height / 2 > bounds.bottom) {
             speedY *= -1
             posY = bounds.bottom - height / 2 // Adjusting the position to prevent sticking at the boundary
+            println("4")
         }
     }
 

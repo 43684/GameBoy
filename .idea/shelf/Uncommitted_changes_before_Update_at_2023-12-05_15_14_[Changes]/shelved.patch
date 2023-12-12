@@ -1,0 +1,19 @@
+Index: app/src/main/java/com/example/gameboy/Ball.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.gameboy\r\n\r\nimport android.content.Context\r\nimport android.graphics.Canvas\r\nimport android.graphics.Paint\r\nimport android.graphics.Rect\r\nimport androidx.fragment.app.Fragment\r\n\r\nclass Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ): Fragment(){\r\n\r\n    var listener: GameListener? = null\r\n    var paint = Paint()\r\n\r\n\r\n    override fun onAttach(context: Context){\r\n        super.onAttach(context)\r\n\r\n        try{\r\n            listener = context as GameListener\r\n            println(\"Successful implementation\")\r\n        } catch (e: Exception){\r\n            println(\"Failed implementation\")\r\n        }\r\n\r\n    }\r\n    fun checkBounds(bounds: Rect){\r\n        if (posX - size <0){\r\n            this.speedX *= -1\r\n            this.posX += speedX *2\r\n        }\r\n        if (posX + size > bounds.right){\r\n            speedX *= -1\r\n        }\r\n        if (posY - size <0){\r\n           resetPosition()\r\n        }\r\n        if (posY + size > bounds.bottom){\r\n            resetPosition()\r\n        }\r\n    }\r\n\r\n    private fun resetPosition() {\r\n        listener?.startPongMenu()\r\n    }\r\n\r\n    fun update(){\r\n\r\n        posY += speedY\r\n        posX += speedX\r\n\r\n    }\r\n\r\n    fun draw(canvas: Canvas?){\r\n\r\n        canvas?.drawCircle(posX, posY, size, paint)\r\n    }\r\n\r\n\r\n    interface GameListener{\r\n        fun startPongMenu()\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/gameboy/Ball.kt b/app/src/main/java/com/example/gameboy/Ball.kt
+--- a/app/src/main/java/com/example/gameboy/Ball.kt	(revision 3772296ed3b0d97111a06ee97272e814d379bf67)
++++ b/app/src/main/java/com/example/gameboy/Ball.kt	(date 1701783423685)
+@@ -4,6 +4,8 @@
+ import android.graphics.Canvas
+ import android.graphics.Paint
+ import android.graphics.Rect
++import android.os.Bundle
++import android.view.View
+ import androidx.fragment.app.Fragment
+ 
+ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ): Fragment(){

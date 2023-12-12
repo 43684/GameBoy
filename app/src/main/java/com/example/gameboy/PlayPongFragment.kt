@@ -25,6 +25,9 @@ class PlayPongFragment : Fragment() {
     ): View? {
 
         binding = FragmentPlayPongBinding.inflate(inflater)
+        //binding.textViewPongScore.bringToFront()
+        binding.textViewPongScore.text = arguments?.getString("score")
+
 
         val gameView = GameView(requireContext())
 
