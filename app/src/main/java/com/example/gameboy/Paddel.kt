@@ -2,10 +2,8 @@ package com.example.gameboy
 
 import android.content.Context
 import android.graphics.Canvas
-import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
-import android.graphics.drawable.shapes.Shape
 class Paddle(context: Context, var posX: Float, var posY: Float, var width: Float, var height: Float, var speedX: Float, var speedY: Float) {
 
     var paint = Paint()
@@ -13,22 +11,22 @@ class Paddle(context: Context, var posX: Float, var posY: Float, var width: Floa
     fun checkBounds(bounds: Rect) {
         if (posX - width / 2 < 0) {
             speedX *= -1
-            posX = width / 2 // Adjusting the position to prevent sticking at the boundary
+            posX = width / 2
             println("1")
         }
         if (posX + width / 2 > bounds.right) {
             speedX *= -1
-            posX = bounds.right - width / 2 // Adjusting the position to prevent sticking at the boundary
+            posX = bounds.right - width / 2
             println("2")
         }
         if (posY - height / 2 < 0) {
             speedY *= -1
-            posY = height / 2 // Adjusting the position to prevent sticking at the boundary
+            posY = height / 2
             println("3")
         }
         if (posY + height / 2 > bounds.bottom) {
             speedY *= -1
-            posY = bounds.bottom - height / 2 // Adjusting the position to prevent sticking at the boundary
+            posY = bounds.bottom - height / 2
             println("4")
         }
     }

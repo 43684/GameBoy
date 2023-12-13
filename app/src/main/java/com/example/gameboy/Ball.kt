@@ -4,15 +4,12 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.Fragment
 
 class Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ): Fragment(){
 
     var listener: GameListener? = null
     var paint = Paint()
-    var highscore = 0
 
 
     override fun onAttach(context: Context){
@@ -36,7 +33,6 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
 
         }
         if (posY - size <0){
-          //  listener?.startPongMenu()
             posY = bounds.exactCenterY()
             posX = bounds.exactCenterX()
             speedX = 0f
@@ -45,7 +41,6 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
 
         }
         if (posY + size > bounds.bottom){
-//            listener?.startPongMenu()
             posY = bounds.exactCenterY()
             posX = bounds.exactCenterX()
             speedX = 0f

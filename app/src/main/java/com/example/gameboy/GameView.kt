@@ -8,8 +8,6 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import android.widget.TextView
-
 class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
     private var thread: Thread? = null
@@ -60,7 +58,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             highscore++
             Log.d("HighScore", "Current High Score: $highscore")
 
-            // Notify the listener of the high score change
             highScoreListener?.onHighScoreUpdated(highscore)
         }
     }
@@ -94,7 +91,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         canvas = mHolder!!.lockCanvas()
         canvas.drawColor(Color.BLACK)
         ball.draw(canvas)
-        padel1.speedY = 0f;
+        padel1.speedY = 0f
         padel1.drawPadel(canvas)
         padel2.speedY = 0f
         padel2.drawPadel((canvas))
@@ -104,7 +101,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         val sX = event?.x.toString()
-        val sY = event?.y.toString()
         padel1.posX = sX.toFloat()
         padel2.posX = sX.toFloat()
 
@@ -136,9 +132,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             intersects(ball, padel1)
             intersects(ball, padel2)
 
-            post {
-                highScoreListener?.onHighScoreUpdated(highscore)
             }
         }
     }
-}

@@ -29,6 +29,9 @@ class PlayPongFragment : Fragment(), HighScoreListener {
         return rootView
     }
 
+    /***
+     * Här nedan
+     */
     override fun onHighScoreUpdated(highScore: Int) {
         activity?.runOnUiThread {
             binding.textViewPongScore.text = "Score: $highScore"
