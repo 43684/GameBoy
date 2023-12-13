@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.example.gameboy.databinding.FragmentPlayPongBinding
+
 class PlayPongFragment : Fragment(), HighScoreListener {
 
     lateinit var binding: FragmentPlayPongBinding
@@ -36,4 +37,5 @@ class PlayPongFragment : Fragment(), HighScoreListener {
         activity?.runOnUiThread {
             binding.textViewPongScore.text = "Score: $highScore"
         }
-    }}
+    }
+}
