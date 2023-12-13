@@ -5,11 +5,15 @@ import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Bundle
+import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import android.widget.TextView
 
 class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
+
+    var highScoreListener: HighScoreListener? = null
 
     private var thread: Thread? = null
     private var running = false
@@ -27,6 +31,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         }
         setup()
     }
+
     private fun setup() {
         ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
         padel1 = Paddle(this.context, 100f, 100f, 200f, 30f, 5f, 5f)
@@ -55,19 +60,13 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         if (distanceSquared <= (ball.size / 2) * (ball.size / 2)) {
             // Collision detected
             ball(ball, padel)
-            highscore ++
-            println(highscore)
-            val playPongFragment = PlayPongFragment()
+            highscore++
+            Log.d("HighScore", "Current High Score: $highscore")
 
-            // Pass input parameters to
-            val bundle = Bundle().apply {
-                putString("Score","$highscore")
-            }
-            playPongFragment.arguments = bundle
-
+            // Notify the listener of the high score change
+            highScoreListener?.onHighScoreUpdated(highscore)
         }
     }
-
     // Helper function to clamp a value within a specified range
     fun clamp(value: Float, min: Float, max: Float): Float {
         return Math.max(min, Math.min(max, value))
@@ -128,8 +127,15 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         stop()
     }
 
+    fun setHighScoreTextView(textView: TextView) {
+        textView.text = "Score: $highscore"
+        Log.d("GameView", "Highscore update")
+    }
+
+
     override fun run() {
         while (running) {
+            Log.d("GameView", "Updating and Drawing")
             update()
             draw()
             ball.checkBounds(bounds)
