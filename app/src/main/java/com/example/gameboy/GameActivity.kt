@@ -24,8 +24,6 @@ class GameActivity : AppCompatActivity(), PongFragment.GameListener,
 
         binding.logoutButton.setOnClickListener {
             logoutUser()
-
-            // Optionally, navigate to the login screen or perform other actions
         }
     }
 

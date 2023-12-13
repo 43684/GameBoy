@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
-import android.os.Bundle
 import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
@@ -12,8 +11,6 @@ import android.view.SurfaceView
 import android.widget.TextView
 
 class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
-
-    var highScoreListener: HighScoreListener? = null
 
     private var thread: Thread? = null
     private var running = false
@@ -24,6 +21,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private var bounds = Rect()
     var mHolder: SurfaceHolder? = holder
     var highscore = 0
+    var highScoreListener: HighScoreListener? = null
 
     init {
         if (mHolder != null) {
@@ -45,12 +43,12 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         ball.speedY *= -1
         padel1.speedY = 0f
         padel2.speedY = 0f
-        //ball1.paint.color = Color.YELLOW
     }
 
     fun intersects(ball: Ball, padel: Paddle) {
         val closestX = clamp(ball.posX, padel.posX - padel.width / 2, padel.posX + padel.width / 2)
-        val closestY = clamp(ball.posY, padel.posY - padel.height / 2, padel.posY + padel.height / 2)
+        val closestY =
+            clamp(ball.posY, padel.posY - padel.height / 2, padel.posY + padel.height / 2)
 
         val distanceX = ball.posX - closestX
         val distanceY = ball.posY - closestY
@@ -58,7 +56,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         val distanceSquared = distanceX * distanceX + distanceY * distanceY
 
         if (distanceSquared <= (ball.size / 2) * (ball.size / 2)) {
-            // Collision detected
             ball(ball, padel)
             highscore++
             Log.d("HighScore", "Current High Score: $highscore")
@@ -67,7 +64,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             highScoreListener?.onHighScoreUpdated(highscore)
         }
     }
-    // Helper function to clamp a value within a specified range
+
     fun clamp(value: Float, min: Float, max: Float): Float {
         return Math.max(min, Math.min(max, value))
     }
@@ -127,12 +124,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         stop()
     }
 
-    fun setHighScoreTextView(textView: TextView) {
-        textView.text = "Score: $highscore"
-        Log.d("GameView", "Highscore update")
-    }
-
-
     override fun run() {
         while (running) {
             Log.d("GameView", "Updating and Drawing")
@@ -144,6 +135,10 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
             intersects(ball, padel1)
             intersects(ball, padel2)
+
+            post {
+                highScoreListener?.onHighScoreUpdated(highscore)
+            }
         }
     }
 }
