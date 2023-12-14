@@ -11,6 +11,9 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
     var listener: GameListener? = null
     var paint = Paint()
 
+    var highScoreListener: HighScoreListener? = null
+
+
 
     override fun onAttach(context: Context){
         super.onAttach(context)
@@ -66,4 +69,6 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
         fun startPongMenu()
 
     }
+
+
 }

@@ -122,7 +122,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     override fun run() {
         while (running) {
-            Log.d("GameView", "Updating and Drawing")
+           // Log.d("GameView", "Updating and Drawing")
             update()
             draw()
             ball.checkBounds(bounds)
