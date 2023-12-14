@@ -10,17 +10,17 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gameboy.databinding.FragmentSelectGameBinding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class GameSelectFragment: Fragment() {
 
 
 
-    private val highScores = listOf(
-        UserData("Player 1", 100),
-        UserData("Player 2", 90),
-        UserData("Player 3", 80),
-        // Add more high scores as needed
-    )
+    private val userList = mutableListOf<UserData>()
 
     lateinit var binding: FragmentSelectGameBinding
     var listener: GameListener? = null
@@ -43,12 +43,13 @@ class GameSelectFragment: Fragment() {
         savedInstanceState: Bundle?
     ): View {
 
+        fetchData()
 
         binding = FragmentSelectGameBinding.inflate(layoutInflater)
 
         val recyclerView: RecyclerView = binding.recyclerView
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
-        recyclerView.adapter = HighScoreAdapter(highScores)
+        recyclerView.adapter = HighScoreAdapter(userList)
 
         return binding.root
     }
@@ -69,5 +70,34 @@ class GameSelectFragment: Fragment() {
     interface GameListener{
         fun startPongMenu()
 
+    }
+
+    fun fetchData() {
+        val database = FirebaseDatabase.getInstance()
+        val dataRef: DatabaseReference = database.getReference("users")
+
+        dataRef.addListenerForSingleValueEvent(object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userList = mutableListOf<UserData>()
+
+                for (childSnapshot in snapshot.children) {
+                    val userDataMap = childSnapshot.value as? Map<String, Any>
+
+                    if (userDataMap != null) {
+                        val name = userDataMap["name"] as? String ?: ""
+                        val highscore = (userDataMap["highscore"] as? Long)?.toInt() ?: 0
+
+                        val userData = UserData(name, highscore)
+                        userList.add(userData)
+                    }
+                }
+
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                // Handle errors
+                println("Error: $error")
+            }
+        })
     }
 }
