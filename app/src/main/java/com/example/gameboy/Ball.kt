@@ -4,19 +4,28 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
+import androidx.fragment.app.Fragment
 
-class Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ){
+class Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ): Fragment(){
 
-
-    //var posX = 0f
-    //    var posY = 0f
-    //    var paint = Paint()
-    //    var size = 50f
-    //    var speed = 5f
-
-
+    var listener: GameListener? = null
     var paint = Paint()
 
+    var highScoreListener: HighScoreListener? = null
+
+
+
+    override fun onAttach(context: Context){
+        super.onAttach(context)
+
+        try{
+            listener = context as GameListener
+            println("Successful implementation")
+        } catch (e: Exception){
+            println("Failed implementation")
+        }
+
+    }
     fun checkBounds(bounds: Rect){
         if (posX - size <0){
             this.speedX *= -1
@@ -24,14 +33,25 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
         }
         if (posX + size > bounds.right){
             speedX *= -1
+
         }
         if (posY - size <0){
-            speedY *= -1
+            posY = bounds.exactCenterY()
+            posX = bounds.exactCenterX()
+            speedX = 0f
+            speedY = 0f
+
+
         }
         if (posY + size > bounds.bottom){
-            speedY *= -1
+            posY = bounds.exactCenterY()
+            posX = bounds.exactCenterX()
+            speedX = 0f
+            speedY = 0f
+
         }
     }
+
     fun update(){
 
         posY += speedY
@@ -43,4 +63,12 @@ class Ball (context: Context, var posX: Float, var posY: Float, var size: Float,
 
         canvas?.drawCircle(posX, posY, size, paint)
     }
+
+
+    interface GameListener{
+        fun startPongMenu()
+
+    }
+
+
 }

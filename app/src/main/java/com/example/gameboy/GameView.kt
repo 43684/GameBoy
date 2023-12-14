@@ -4,19 +4,22 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
+import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-
 class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
     private var thread: Thread? = null
     private var running = false
     lateinit var canvas: Canvas
-    private lateinit var ball1: Ball
-    private lateinit var ball2: Ball
+    private lateinit var ball: Ball
+    private lateinit var padel1: Paddle
+    private lateinit var padel2: Paddle
     private var bounds = Rect()
     var mHolder: SurfaceHolder? = holder
+    var highscore = 0
+    var highScoreListener: HighScoreListener? = null
 
     init {
         if (mHolder != null) {
@@ -26,32 +29,41 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     }
 
     private fun setup() {
-        ball1 = Ball(this.context, 100f, 100f, 50f, -5f, 5f)
-        ball2 = Ball(this.context, 100f, 300f, 50f, 5f, 0f)
-        //  ball1.posX = 100f
-        //        ball1.posY = 100f
-        //        ball2.posX = 100f
-        //        ball2.posY = 400f
-        ball1.paint.color = Color.RED
-        ball2.paint.color = Color.GREEN
+        ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
+        padel1 = Paddle(this.context, 100f, 100f, 200f, 30f, 5f, 5f)
+        padel2 = Paddle(this.context, 100f, 1200f, 200f, 30f, 5f, 5f)
+        ball.paint.color = Color.RED
+        padel1.paint.color = Color.WHITE
+        padel2.paint.color = Color.WHITE
     }
 
-    fun ball(b1: Ball, b2: Ball) {
-        ball1.speedY *= -1
-        ball2.speedY = 0f
-        //ball1.paint.color = Color.YELLOW
+    fun ball(b1: Ball, b2: Paddle) {
+        ball.speedY *= -1
+        padel1.speedY = 0f
+        padel2.speedY = 0f
     }
 
-    fun intersects(b1: Ball, b2: Ball) {
-        if (Math.sqrt(
-                Math.pow(
-                    b1.posX - b2.posX.toDouble(),
-                    2.0
-                ) + Math.pow(b1.posY - b2.posY.toDouble(), 2.0)
-            ) <= b1.size + b2.size
-        ) {
-            ball(b1, b2)
+    fun intersects(ball: Ball, padel: Paddle) {
+        val closestX = clamp(ball.posX, padel.posX - padel.width / 2, padel.posX + padel.width / 2)
+        val closestY =
+            clamp(ball.posY, padel.posY - padel.height / 2, padel.posY + padel.height / 2)
+
+        val distanceX = ball.posX - closestX
+        val distanceY = ball.posY - closestY
+
+        val distanceSquared = distanceX * distanceX + distanceY * distanceY
+
+        if (distanceSquared <= (ball.size / 2) * (ball.size / 2)) {
+            ball(ball, padel)
+            highscore++
+            Log.d("HighScore", "Current High Score: $highscore")
+
+            highScoreListener?.onHighScoreUpdated(highscore)
         }
+    }
+
+    fun clamp(value: Float, min: Float, max: Float): Float {
+        return Math.max(min, Math.min(max, value))
     }
 
     fun start() {
@@ -70,24 +82,27 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     }
 
     fun update() {
-        ball1.update()
-        ball2.update()
+        ball.update()
+        padel1.update()
+        padel2.update()
     }
 
     fun draw() {
         canvas = mHolder!!.lockCanvas()
-        canvas.drawColor(Color.BLUE)
-        ball1.draw(canvas)
-        ball2.speedY = 0f;
-        ball2.draw(canvas)
+        canvas.drawColor(Color.BLACK)
+        ball.draw(canvas)
+        padel1.speedY = 0f
+        padel1.drawPadel(canvas)
+        padel2.speedY = 0f
+        padel2.drawPadel((canvas))
         mHolder!!.unlockCanvasAndPost(canvas)
+
     }
 
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         val sX = event?.x.toString()
-        val sY = event?.y.toString()
-        ball2.posX = sX.toFloat()
-        ball2.posY = sY.toFloat()
+        padel1.posX = sX.toFloat()
+        padel2.posX = sX.toFloat()
 
         return true
     }
@@ -107,10 +122,16 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     override fun run() {
         while (running) {
+           // Log.d("GameView", "Updating and Drawing")
             update()
             draw()
-            ball1.checkBounds(bounds)
-            intersects(ball1, ball2)
+            ball.checkBounds(bounds)
+            padel1.checkBounds(bounds)
+            padel2.checkBounds(bounds)
+
+            intersects(ball, padel1)
+            intersects(ball, padel2)
+
+            }
         }
     }
-}
