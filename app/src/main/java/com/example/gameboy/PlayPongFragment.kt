@@ -57,15 +57,6 @@ class PlayPongFragment : Fragment(), HighScoreListener, GameView.VisibilityListe
 
         } )
 
-        binding.button2.setOnClickListener(View.OnClickListener {
-
-           makeVisible()
-
-            } )
-
-
-
-
         return rootView
     }
 

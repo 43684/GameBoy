@@ -10,7 +10,7 @@ import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.fragment.app.findFragment
 
-class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable{
+class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
     private var thread: Thread? = null
     private var running = false
@@ -22,6 +22,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     var mHolder: SurfaceHolder? = holder
     var highscore = 0
     var highScoreListener: HighScoreListener? = null
+    var saveHighscore: Int = 0
+
 
     init {
         if (mHolder != null) {
@@ -32,8 +34,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     private fun setup() {
         ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
-        padel1 = Paddle(this.context, 100f, 100f, 200f, 30f, 5f, 5f)
-        padel2 = Paddle(this.context, 100f, 1200f, 200f, 30f, 5f, 5f)
+        padel1 = Paddle(this.context, 500f, 100f, 200f, 30f, 5f, 5f)
+        padel2 = Paddle(this.context, 500f, 1200f, 200f, 30f, 5f, 5f)
         ball.paint.color = Color.RED
         padel1.paint.color = Color.WHITE
         padel2.paint.color = Color.WHITE
@@ -61,6 +63,11 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             Log.d("HighScore", "Current High Score: $highscore")
 
             highScoreListener?.onHighScoreUpdated(highscore)
+
+            if (saveHighscore < highscore){
+                saveHighscore = highscore
+                Log.d("saveHighscore", "ssved highschore: $highscore")
+            }
         }
     }
 
@@ -124,11 +131,11 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     override fun run() {
         while (running) {
-           // Log.d("GameView", "Updating and Drawing")
+            // Log.d("GameView", "Updating and Drawing")
             update()
             draw()
             val gameOver = ball.checkBounds(bounds)
-            if(gameOver){
+            if (gameOver) {
 
                 onGameOver()
             }
@@ -139,20 +146,23 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
             intersects(ball, padel1)
             intersects(ball, padel2)
 
-            }
         }
+    }
 
-    fun onGameOver(){
+    fun onGameOver() {
         println("onGameOver")
         running = false
         findFragment<PlayPongFragment>().makeVisible()
 
+        /**
+         *  updateData()
+          */
+
+
     }
-
-
 
     interface VisibilityListener {
         fun makeVisible()
     }
 
-    }
+}

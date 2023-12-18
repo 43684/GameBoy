@@ -7,67 +7,47 @@ import android.graphics.Rect
 import android.view.ActionProvider.VisibilityListener
 import androidx.fragment.app.Fragment
 
-class Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ): Fragment() {
-
+class Ball(
+    context: Context,
+    var posX: Float,
+    var posY: Float,
+    var size: Float,
+    var speedX: Float,
+    var speedY: Float
+) : Fragment() {
 
     var paint = Paint()
 
-    var highScoreListener: HighScoreListener? = null
+    fun checkBounds(bounds: Rect): Boolean {
+        var gameOver = false
 
-    var visibilityListener: VisibilityListener? = null
-
-    override fun onAttach(context: Context) {
-        super.onAttach(context)
-        println("on attach")
-
-        try {
-            visibilityListener = context as VisibilityListener
-            println("Successful implementation as Ball")
-        } catch (e: Exception) {
-            println("Failed implementation")
+        if (posX - size < 0) {
+            this.speedX *= -1
+            this.posX += speedX * 2
         }
+        if (posX + size > bounds.right) {
+            speedX *= -1
+
+        }
+        if (posY - size < 0 || posY + size > bounds.bottom) {
+            speedX = 0f
+            speedY = 0f
+
+            gameOver = true
+
+        }
+        return gameOver
     }
 
-        fun checkBounds(bounds: Rect): Boolean {
-            var gameOver = false
+    fun update() {
 
-            if (posX - size < 0) {
-                this.speedX *= -1
-                this.posX += speedX * 2
-            }
-            if (posX + size > bounds.right) {
-                speedX *= -1
+        posY += speedY
+        posX += speedX
 
-            }
-            if (posY - size < 0 || posY + size > bounds.bottom) {
-                speedX = 0f
-                speedY = 0f
+    }
 
-                gameOver = true
+    fun draw(canvas: Canvas?) {
 
-            }
-            return gameOver
-        }
-
-        fun update() {
-
-            posY += speedY
-            posX += speedX
-
-        }
-
-        fun draw(canvas: Canvas?) {
-
-            canvas?.drawCircle(posX, posY, size, paint)
-        }
-
-        override fun onDetach() {
-            super.onDetach()
-            visibilityListener = null
-        }
-
-
-    interface VisibilityListener {
-        fun makeVisible()
+        canvas?.drawCircle(posX, posY, size, paint)
     }
 }
