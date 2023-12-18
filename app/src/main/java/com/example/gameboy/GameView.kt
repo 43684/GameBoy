@@ -8,7 +8,9 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
+import androidx.fragment.app.findFragment
+
+class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable{
 
     private var thread: Thread? = null
     private var running = false
@@ -125,7 +127,12 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
            // Log.d("GameView", "Updating and Drawing")
             update()
             draw()
-            ball.checkBounds(bounds)
+            val gameOver = ball.checkBounds(bounds)
+            if(gameOver){
+
+                onGameOver()
+            }
+
             padel1.checkBounds(bounds)
             padel2.checkBounds(bounds)
 
@@ -134,4 +141,18 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
             }
         }
+
+    fun onGameOver(){
+        println("onGameOver")
+        running = false
+        findFragment<PlayPongFragment>().makeVisible()
+
+    }
+
+
+
+    interface VisibilityListener {
+        fun makeVisible()
+    }
+
     }
