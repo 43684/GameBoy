@@ -34,8 +34,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     private fun setup() {
         ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
-        padel1 = Paddle(this.context, 500f, 100f, 200f, 30f, 5f, 5f)
-        padel2 = Paddle(this.context, 500f, 1200f, 200f, 30f, 5f, 5f)
+        padel1 = Paddle(this.context, 500f, 200f, 200f, 30f, 5f, 5f)
+        padel2 = Paddle(this.context, 500f, 1400f, 200f, 30f, 5f, 5f)
         ball.paint.color = Color.RED
         padel1.paint.color = Color.WHITE
         padel2.paint.color = Color.WHITE
@@ -48,25 +48,33 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     }
 
     fun intersects(ball: Ball, padel: Paddle) {
-        val closestX = clamp(ball.posX, padel.posX - padel.width / 2, padel.posX + padel.width / 2)
-        val closestY =
-            clamp(ball.posY, padel.posY - padel.height / 2, padel.posY + padel.height / 2)
 
-        val distanceX = ball.posX - closestX
-        val distanceY = ball.posY - closestY
+        if (ball.posY < 1000 || ball.posY > 1000 ) {
+            val closestX = clamp(ball.posX, padel.posX - padel.width, padel.posX + padel.width)
+            val closestY =
+                clamp(ball.posY, padel.posY - padel.height, padel.posY + padel.height)
 
-        val distanceSquared = distanceX * distanceX + distanceY * distanceY
+            val distanceX = ball.posX - closestX
+            val distanceY = ball.posY - closestY
 
-        if (distanceSquared <= (ball.size / 2) * (ball.size / 2)) {
-            ball(ball, padel)
-            highscore++
-            Log.d("HighScore", "Current High Score: $highscore")
+            val distanceSquared = distanceX * distanceX + distanceY * distanceY
 
-            highScoreListener?.onHighScoreUpdated(highscore)
+            if (distanceSquared <= (ball.size / 2) * (ball.size / 2)) {
+                ball(ball, padel)
+                highscore++
+                Log.d("HighScore", "Current High Score: $highscore")
 
-            if (saveHighscore < highscore){
-                saveHighscore = highscore
-                Log.d("saveHighscore", "ssved highschore: $highscore")
+                highScoreListener?.onHighScoreUpdated(highscore)
+
+                if (highscore > 1 && highscore % 2 == 0) {
+                    ball.speedX *= 1.2f
+                    ball.speedY *= 1.2f
+                }
+
+                if (saveHighscore < highscore) {
+                    saveHighscore = highscore
+                    Log.d("saveHighscore", "ssved highschore: $highscore")
+                }
             }
         }
     }
@@ -142,6 +150,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
             padel1.checkBounds(bounds)
             padel2.checkBounds(bounds)
+
 
             intersects(ball, padel1)
             intersects(ball, padel2)

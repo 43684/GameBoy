@@ -22,11 +22,12 @@ class Ball(
         var gameOver = false
 
         if (posX - size < 0) {
-            this.speedX *= -1
+            this.speedX *= -1f
             this.posX += speedX * 2
         }
         if (posX + size > bounds.right) {
-            speedX *= -1
+            this.speedX *= -1f
+            this.posX += speedX * 2
 
         }
         if (posY - size < 0 || posY + size > bounds.bottom) {
