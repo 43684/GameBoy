@@ -7,50 +7,62 @@
     <androidx.cardview.widget.CardView
         android:id="@+id/cw_game_over"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:foregroundGravity="center"
+        android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
         android:backgroundTint="@color/black"
-        android:visibility="gone" >
+        android:foregroundGravity="center"
+        android:visibility="gone">
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
             android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_game_over"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Game over"
-            />
+            <TextView
+                android:id="@+id/tv_game_over"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="top|center_horizontal"
+                android:text="Game over"
+                android:textColor="@color/rod"
+                android:textSize="45sp" />
 
-        <TextView
-            android:id="@+id/tv_final_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:hint="Final score:"
-            />
+            <TextView
+                android:id="@+id/tv_final_score"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:hint="Final score:"
+                android:textSize="25sp"
+                android:textColor="@color/vit" />
 
-        <Button
-            android:id="@+id/btn_main_menu"
-            android:text="Main Menu"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
 
-        <Button
-            android:id="@+id/btn_play_again"
-            android:text="Play Again"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            />
+                <Button
+                    android:id="@+id/btn_main_menu"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:textSize="18sp"
+                    android:backgroundTint="@color/vit"
+                    android:textColor="@color/svart"
+                    android:text="Main Menu" />
 
+                <Button
+                    android:id="@+id/btn_play_again"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/vit"
+                    android:textColor="@color/svart"
+                    android:textSize="18sp"
+                    android:text="Play Again" />
+            </LinearLayout>
         </LinearLayout>
-
-
     </androidx.cardview.widget.CardView>
-
 
     <FrameLayout
         android:id="@+id/frame5"
@@ -58,12 +70,12 @@
         android:layout_height="match_parent">
 
     </FrameLayout>
+
     <TextView
         android:id="@+id/textViewPongScore"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/vit"
         android:text="Score:"
-        android:textSize="20sp"
-        />
+        android:textColor="@color/vit"
+        android:textSize="20sp" />
 </RelativeLayout>
