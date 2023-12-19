@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="150dp"
-        android:backgroundTint="@color/black"
+        android:backgroundTint="@color/clear"
         android:foregroundGravity="center"
         android:visibility="gone">
 

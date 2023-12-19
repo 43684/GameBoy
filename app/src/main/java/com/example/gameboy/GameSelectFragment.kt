@@ -85,8 +85,12 @@ class GameSelectFragment : Fragment() {
 
                         val userData = UserData(name, highscore)
                         userList.add(userData)
+
+
                     }
+
                 }
+                userList.sortWith(compareByDescending { it.highscore })
 
                 adapter.notifyDataSetChanged()
             }

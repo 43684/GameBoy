@@ -10,6 +10,7 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.core.graphics.alpha
 import androidx.fragment.app.findFragment
 
 import java.lang.Math.atan2
@@ -134,7 +135,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     fun draw() {
         canvas = mHolder!!.lockCanvas()
-        canvas.drawColor(Color.BLACK)
+        canvas.drawColor(Color.argb(128, 0, 0, 0))
         ball.draw(canvas)
         padel1.speedY = 0f
         padel1.drawPadel(canvas)
