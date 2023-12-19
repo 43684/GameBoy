@@ -46,7 +46,7 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:backgroundTint="@color/vit"
                     android:textColor="@color/svart"
                     android:text="Main Menu" />
@@ -58,7 +58,7 @@
                     android:layout_weight="1"
                     android:backgroundTint="@color/vit"
                     android:textColor="@color/svart"
-                    android:textSize="18sp"
+                    android:textSize="16sp"
                     android:text="Play Again" />
             </LinearLayout>
         </LinearLayout>
