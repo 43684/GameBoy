@@ -54,6 +54,7 @@ class GameSelectFragment : Fragment() {
         binding.btn1.setOnClickListener(View.OnClickListener {
             listener?.startPong()
             println("clicking")
+
         })
     }
 
