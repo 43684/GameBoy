@@ -1,0 +1,137 @@
+Index: app/src/main/java/com/example/gameboy/Ball.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.gameboy\r\n\r\nimport android.content.Context\r\nimport android.graphics.Canvas\r\nimport android.graphics.Paint\r\nimport android.graphics.Rect\r\nimport android.view.ActionProvider.VisibilityListener\r\nimport androidx.fragment.app.Fragment\r\n\r\nclass Ball(\r\n    context: Context,\r\n    var posX: Float,\r\n    var posY: Float,\r\n    var size: Float,\r\n    var speedX: Float,\r\n    var speedY: Float\r\n) : Fragment() {\r\n\r\n    var paint = Paint()\r\n\r\n    fun checkBounds(bounds: Rect): Boolean {\r\n        var gameOver = false\r\n\r\n        if (posX - size < 0) {\r\n            this.speedX *= -1\r\n            this.posX += speedX * 2\r\n        }\r\n        if (posX + size > bounds.right) {\r\n            speedX *= -1\r\n\r\n        }\r\n        if (posY - size < 0 || posY + size > bounds.bottom) {\r\n            speedX = 0f\r\n            speedY = 0f\r\n\r\n            gameOver = true\r\n\r\n        }\r\n        return gameOver\r\n    }\r\n\r\n    fun update() {\r\n\r\n        posY += speedY\r\n        posX += speedX\r\n\r\n    }\r\n\r\n    fun draw(canvas: Canvas?) {\r\n\r\n        canvas?.drawCircle(posX, posY, size, paint)\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/gameboy/Ball.kt b/app/src/main/java/com/example/gameboy/Ball.kt
+--- a/app/src/main/java/com/example/gameboy/Ball.kt	(revision 1d7664afbfdc584c191ab86aa67e0615e34f05fc)
++++ b/app/src/main/java/com/example/gameboy/Ball.kt	(date 1702979591974)
+@@ -18,24 +18,23 @@
+ 
+     var paint = Paint()
+ 
+-    fun checkBounds(bounds: Rect): Boolean {
++    fun checkBounds(bounds: Rect, paddle1: Paddle, paddle2: Paddle): Boolean {
+         var gameOver = false
+ 
+-        if (posX - size < 0) {
+-            this.speedX *= -1
+-            this.posX += speedX * 2
++        if (posX - size < 0 || posX + size > bounds.right) {
++            speedX *= -1 // Reverse the ball's direction upon collision with the screen edges
+         }
+-        if (posX + size > bounds.right) {
+-            speedX *= -1
+ 
++        if (posY - size < 0) {
++            speedY *= -1 // Reverse the ball's direction upon collision with the top
+         }
+-        if (posY - size < 0 || posY + size > bounds.bottom) {
++
++        if (posY + size > bounds.bottom) {
+             speedX = 0f
+             speedY = 0f
+-
+-            gameOver = true
++            gameOver = true // Game over when the ball goes below the paddles
++        }
+ 
+-        }
+         return gameOver
+     }
+ 
+Index: app/src/main/java/com/example/gameboy/GameView.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.gameboy\r\n\r\nimport android.content.Context\r\nimport android.graphics.Canvas\r\nimport android.graphics.Color\r\nimport android.graphics.Rect\r\nimport android.util.Log\r\nimport android.view.MotionEvent\r\nimport android.view.SurfaceHolder\r\nimport android.view.SurfaceView\r\nimport androidx.fragment.app.findFragment\r\n\r\nclass GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {\r\n\r\n    private var thread: Thread? = null\r\n    private var running = false\r\n    lateinit var canvas: Canvas\r\n    private lateinit var ball: Ball\r\n    private lateinit var padel1: Paddle\r\n    private lateinit var padel2: Paddle\r\n    private var bounds = Rect()\r\n    var mHolder: SurfaceHolder? = holder\r\n    var highscore = 0\r\n    var highScoreListener: HighScoreListener? = null\r\n    var saveHighscore: Int = 0\r\n\r\n\r\n    init {\r\n        if (mHolder != null) {\r\n            mHolder?.addCallback(this)\r\n        }\r\n        setup()\r\n    }\r\n\r\n    private fun setup() {\r\n        ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)\r\n        padel1 = Paddle(this.context, 500f, 100f, 200f, 30f, 5f, 5f)\r\n        padel2 = Paddle(this.context, 500f, 1200f, 200f, 30f, 5f, 5f)\r\n        ball.paint.color = Color.RED\r\n        padel1.paint.color = Color.WHITE\r\n        padel2.paint.color = Color.WHITE\r\n    }\r\n\r\n    fun ball(b1: Ball, b2: Paddle) {\r\n        ball.speedY *= -1\r\n        padel1.speedY = 0f\r\n        padel2.speedY = 0f\r\n    }\r\n\r\n    fun intersects(ball: Ball, padel: Paddle) {\r\n        val closestX = clamp(ball.posX, padel.posX - padel.width / 2, padel.posX + padel.width / 2)\r\n        val closestY =\r\n            clamp(ball.posY, padel.posY - padel.height / 2, padel.posY + padel.height / 2)\r\n\r\n        val distanceX = ball.posX - closestX\r\n        val distanceY = ball.posY - closestY\r\n\r\n        val distanceSquared = distanceX * distanceX + distanceY * distanceY\r\n\r\n        if (distanceSquared <= (ball.size / 2) * (ball.size / 2)) {\r\n            ball(ball, padel)\r\n            highscore++\r\n            Log.d(\"HighScore\", \"Current High Score: $highscore\")\r\n\r\n            highScoreListener?.onHighScoreUpdated(highscore)\r\n\r\n            if (saveHighscore < highscore){\r\n                saveHighscore = highscore\r\n                Log.d(\"saveHighscore\", \"ssved highschore: $highscore\")\r\n            }\r\n        }\r\n    }\r\n\r\n    fun clamp(value: Float, min: Float, max: Float): Float {\r\n        return Math.max(min, Math.min(max, value))\r\n    }\r\n\r\n    fun start() {\r\n        running = true\r\n        thread = Thread(this)\r\n        thread?.start()\r\n    }\r\n\r\n    fun stop() {\r\n        running = false\r\n        try {\r\n            thread?.join()\r\n        } catch (e: InterruptedException) {\r\n            e.printStackTrace()\r\n        }\r\n    }\r\n\r\n    fun update() {\r\n        ball.update()\r\n        padel1.update()\r\n        padel2.update()\r\n    }\r\n\r\n    fun draw() {\r\n        canvas = mHolder!!.lockCanvas()\r\n        canvas.drawColor(Color.BLACK)\r\n        ball.draw(canvas)\r\n        padel1.speedY = 0f\r\n        padel1.drawPadel(canvas)\r\n        padel2.speedY = 0f\r\n        padel2.drawPadel((canvas))\r\n        mHolder!!.unlockCanvasAndPost(canvas)\r\n\r\n    }\r\n\r\n    override fun onTouchEvent(event: MotionEvent?): Boolean {\r\n        val sX = event?.x.toString()\r\n        padel1.posX = sX.toFloat()\r\n        padel2.posX = sX.toFloat()\r\n\r\n        return true\r\n    }\r\n\r\n    override fun surfaceCreated(p0: SurfaceHolder) {\r\n\r\n    }\r\n\r\n    override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {\r\n        bounds = Rect(0, 0, p2, p3)\r\n        start()\r\n    }\r\n\r\n    override fun surfaceDestroyed(p0: SurfaceHolder) {\r\n        stop()\r\n    }\r\n\r\n    override fun run() {\r\n        while (running) {\r\n            // Log.d(\"GameView\", \"Updating and Drawing\")\r\n            update()\r\n            draw()\r\n            val gameOver = ball.checkBounds(bounds)\r\n            if (gameOver) {\r\n\r\n                onGameOver()\r\n            }\r\n\r\n            padel1.checkBounds(bounds)\r\n            padel2.checkBounds(bounds)\r\n\r\n            intersects(ball, padel1)\r\n            intersects(ball, padel2)\r\n\r\n        }\r\n    }\r\n\r\n    fun onGameOver() {\r\n        println(\"onGameOver\")\r\n        running = false\r\n        findFragment<PlayPongFragment>().makeVisible()\r\n\r\n        /**\r\n         *  updateData()\r\n          */\r\n\r\n\r\n    }\r\n\r\n    interface VisibilityListener {\r\n        fun makeVisible()\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/gameboy/GameView.kt b/app/src/main/java/com/example/gameboy/GameView.kt
+--- a/app/src/main/java/com/example/gameboy/GameView.kt	(revision 1d7664afbfdc584c191ab86aa67e0615e34f05fc)
++++ b/app/src/main/java/com/example/gameboy/GameView.kt	(date 1702980140316)
+@@ -35,7 +35,7 @@
+     private fun setup() {
+         ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
+         padel1 = Paddle(this.context, 500f, 100f, 200f, 30f, 5f, 5f)
+-        padel2 = Paddle(this.context, 500f, 1200f, 200f, 30f, 5f, 5f)
++        padel2 = Paddle(this.context, 500f, 1000f, 200f, 30f, 5f, 5f)
+         ball.paint.color = Color.RED
+         padel1.paint.color = Color.WHITE
+         padel2.paint.color = Color.WHITE
+@@ -47,30 +47,38 @@
+         padel2.speedY = 0f
+     }
+ 
+-    fun intersects(ball: Ball, padel: Paddle) {
+-        val closestX = clamp(ball.posX, padel.posX - padel.width / 2, padel.posX + padel.width / 2)
+-        val closestY =
+-            clamp(ball.posY, padel.posY - padel.height / 2, padel.posY + padel.height / 2)
++    // Update the intersects method to check for collisions with the paddles
++    fun intersects(ball: Ball, paddle: Paddle) {
++        val ballRadius = ball.size / 2
++        val paddleHalfWidth = paddle.width / 2
++        val paddleHalfHeight = paddle.height / 2
++
++        val closestX = clamp(ball.posX, paddle.posX - paddleHalfWidth + ballRadius, paddle.posX + paddleHalfWidth - ballRadius)
++        val closestY = clamp(ball.posY, paddle.posY - paddleHalfHeight + ballRadius, paddle.posY + paddleHalfHeight - ballRadius)
+ 
+         val distanceX = ball.posX - closestX
+         val distanceY = ball.posY - closestY
+ 
+         val distanceSquared = distanceX * distanceX + distanceY * distanceY
+ 
+-        if (distanceSquared <= (ball.size / 2) * (ball.size / 2)) {
+-            ball(ball, padel)
++        if (distanceSquared <= ballRadius * ballRadius) {
++            // Collision detected
++            ball.speedY *= -1 // Reverse the ball's direction upon collision
++
++            // Additional logic to update the ball's position if needed
++            ball.posX = closestX + ballRadius * (if (ball.posX > closestX) 1 else -1)
++            ball.posY = closestY + ballRadius * (if (ball.posY > closestY) 1 else -1)
++
++            // Update highscore and other relevant game logic
+             highscore++
+-            Log.d("HighScore", "Current High Score: $highscore")
+-
+             highScoreListener?.onHighScoreUpdated(highscore)
+ 
+-            if (saveHighscore < highscore){
++            if (saveHighscore < highscore) {
+                 saveHighscore = highscore
+-                Log.d("saveHighscore", "ssved highschore: $highscore")
++                Log.d("saveHighscore", "Saved high score: $highscore")
+             }
+         }
+     }
+-
+     fun clamp(value: Float, min: Float, max: Float): Float {
+         return Math.max(min, Math.min(max, value))
+     }
+@@ -131,12 +139,11 @@
+ 
+     override fun run() {
+         while (running) {
+-            // Log.d("GameView", "Updating and Drawing")
+-            update()
++            update()zz
+             draw()
+-            val gameOver = ball.checkBounds(bounds)
+-            if (gameOver) {
+ 
++            // Check for game over condition
++            if (ball.checkBounds(bounds, padel1, padel2)) {
+                 onGameOver()
+             }
+ 
+@@ -145,7 +152,6 @@
+ 
+             intersects(ball, padel1)
+             intersects(ball, padel2)
+-
+         }
+     }
+ 
