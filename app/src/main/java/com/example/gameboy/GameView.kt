@@ -4,17 +4,27 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.fragment.app.findFragment
+
+import java.lang.Math.atan2
+import java.lang.Math.cos
+import java.lang.Math.sin
+import java.lang.Math.sqrt
+import kotlin.math.sqrt
+
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+
 
 class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
@@ -29,6 +39,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     var highscore = 0
     var highScoreListener: HighScoreListener? = null
     var saveHighscore: Int = 0
+    private var collisionCooldown = false
+    private val collisionCooldownTime = 500L
 
 
     init {
@@ -40,8 +52,8 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
 
     private fun setup() {
         ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
-        padel1 = Paddle(this.context, 500f, 200f, 200f, 30f, 5f, 5f)
-        padel2 = Paddle(this.context, 500f, 1400f, 200f, 30f, 5f, 5f)
+        padel1 = Paddle(this.context, 500f, 200f, 200f, 20f, 5f, 5f)
+        padel2 = Paddle(this.context, 500f, 1400f, 200f, 20f, 5f, 5f)
         ball.paint.color = Color.RED
         padel1.paint.color = Color.WHITE
         padel2.paint.color = Color.WHITE
@@ -53,20 +65,19 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         padel2.speedY = 0f
     }
 
-    fun intersects(ball: Ball, padel: Paddle) {
-
-        if (ball.posY < 1000 || ball.posY > 1000 ) {
-            val closestX = clamp(ball.posX, padel.posX - padel.width, padel.posX + padel.width)
-            val closestY =
-                clamp(ball.posY, padel.posY - padel.height, padel.posY + padel.height)
+    fun intersects(ball: Ball, paddle: Paddle) {
+        if (ball.posY > 199 || ball.posY < 1401) {
+            val closestX = clamp(ball.posX, paddle.posX - paddle.width / 2, paddle.posX + paddle.width / 2)
+            val closestY = clamp(ball.posY, paddle.posY - paddle.height / 2, paddle.posY + paddle.height / 2)
 
             val distanceX = ball.posX - closestX
             val distanceY = ball.posY - closestY
 
             val distanceSquared = distanceX * distanceX + distanceY * distanceY
 
-            if (distanceSquared <= (ball.size / 2) * (ball.size / 2)) {
-                ball(ball, padel)
+            if (distanceSquared <= (ball.size / 2) * (ball.size / 2) && !collisionCooldown) {
+                // Handle collision
+                ball(ball, paddle)
                 highscore++
                 Log.d("HighScore", "Current High Score: $highscore")
 
@@ -76,12 +87,28 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
                     ball.speedX *= 1.2f
                     ball.speedY *= 1.2f
                 }
+
+
+                // Update ball position based on collision point
+                val angle = atan2(distanceY.toDouble(), distanceX.toDouble())
+                val overlap = (ball.size / 2) - sqrt(distanceSquared)
+                val newX = ball.posX + (overlap * cos(angle)).toFloat()
+                val newY = ball.posY + (overlap * sin(angle)).toFloat()
+
+                ball.posX = newX
+                ball.posY = newY
+
+                // Set collision cooldown
+                collisionCooldown = true
+                Handler(Looper.getMainLooper()).postDelayed({
+                    collisionCooldown = false
+                }, collisionCooldownTime)
             }
         }
     }
 
     fun clamp(value: Float, min: Float, max: Float): Float {
-        return Math.max(min, Math.min(max, value))
+        return if (value < min) min else if (value > max) max else value
     }
 
     fun start() {

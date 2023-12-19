@@ -7,7 +7,7 @@ import androidx.fragment.app.commit
 import com.example.gameboy.databinding.ActivityGameBinding
 import com.google.firebase.auth.FirebaseAuth
 
-class GameActivity : AppCompatActivity(), PongFragment.GameListener, PlayPongFragment.GameListener,
+class GameActivity : AppCompatActivity(),PlayPongFragment.GameListener,
     GameSelectFragment.GameListener {
 
     lateinit var binding: ActivityGameBinding
@@ -35,7 +35,7 @@ class GameActivity : AppCompatActivity(), PongFragment.GameListener, PlayPongFra
 
     override fun startPongMenu() {
         supportFragmentManager.commit {
-            replace(R.id.frame3, PongFragment())
+            replace(R.id.frame3, GameSelectFragment())
         }
 
     }

@@ -18,6 +18,7 @@ class Ball(
 
     var paint = Paint()
 
+
     fun checkBounds(bounds: Rect): Boolean {
         var gameOver = false
 
