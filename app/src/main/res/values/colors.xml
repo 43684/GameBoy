@@ -17,5 +17,6 @@
     <color name="svart">#2C2928</color>
     <color name="ros">#DBADAA</color>
     <color name="blue">#818C93</color>
+    <color name="clear">#00FFFFFF</color>
 
 </resources>
