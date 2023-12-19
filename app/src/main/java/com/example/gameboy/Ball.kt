@@ -4,71 +4,52 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
+import android.view.ActionProvider.VisibilityListener
 import androidx.fragment.app.Fragment
 
-class Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ): Fragment(){
+class Ball(
+    context: Context,
+    var posX: Float,
+    var posY: Float,
+    var size: Float,
+    var speedX: Float,
+    var speedY: Float
+) : Fragment() {
 
-    var listener: GameListener? = null
     var paint = Paint()
 
-    var highScoreListener: HighScoreListener? = null
 
+    fun checkBounds(bounds: Rect): Boolean {
+        var gameOver = false
 
-
-    override fun onAttach(context: Context){
-        super.onAttach(context)
-
-        try{
-            listener = context as GameListener
-            println("Successful implementation")
-        } catch (e: Exception){
-            println("Failed implementation")
+        if (posX - size < 0) {
+            this.speedX *= -1f
+            this.posX += speedX * 2
         }
-
-    }
-    fun checkBounds(bounds: Rect){
-        if (posX - size <0){
-            this.speedX *= -1
-            this.posX += speedX *2
-        }
-        if (posX + size > bounds.right){
-            speedX *= -1
+        if (posX + size > bounds.right) {
+            this.speedX *= -1f
+            this.posX += speedX * 2
 
         }
-        if (posY - size <0){
-            posY = bounds.exactCenterY()
-            posX = bounds.exactCenterX()
+        if (posY - size < 0 || posY + size > bounds.bottom) {
             speedX = 0f
             speedY = 0f
 
+            gameOver = true
 
         }
-        if (posY + size > bounds.bottom){
-            posY = bounds.exactCenterY()
-            posX = bounds.exactCenterX()
-            speedX = 0f
-            speedY = 0f
-
-        }
+        return gameOver
     }
 
-    fun update(){
+    fun update() {
 
         posY += speedY
         posX += speedX
 
     }
 
-    fun draw(canvas: Canvas?){
+    fun draw(canvas: Canvas?) {
 
         canvas?.drawCircle(posX, posY, size, paint)
     }
-
-
-    interface GameListener{
-        fun startPongMenu()
-
-    }
-
-
 }

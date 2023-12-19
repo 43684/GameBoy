@@ -1,0 +1,90 @@
+Index: app/src/main/java/com/example/gameboy/Ball.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.gameboy\r\n\r\nimport android.content.Context\r\nimport android.graphics.Canvas\r\nimport android.graphics.Paint\r\nimport android.graphics.Rect\r\nimport androidx.fragment.app.Fragment\r\n\r\nclass Ball (context: Context, var posX: Float, var posY: Float, var size: Float, var speedX: Float, var speedY: Float ): Fragment(){\r\n\r\n    var listener: GameListener? = null\r\n    var paint = Paint()\r\n\r\n\r\n    override fun onAttach(context: Context){\r\n        super.onAttach(context)\r\n\r\n        try{\r\n            listener = context as GameListener\r\n            println(\"Successful implementation\")\r\n        } catch (e: Exception){\r\n            println(\"Failed implementation\")\r\n        }\r\n\r\n    }\r\n    fun checkBounds(bounds: Rect){\r\n        if (posX - size <0){\r\n            this.speedX *= -1\r\n            this.posX += speedX *2\r\n        }\r\n        if (posX + size > bounds.right){\r\n            speedX *= -1\r\n\r\n        }\r\n        if (posY - size <0){\r\n            posY = bounds.exactCenterY()\r\n            posX = bounds.exactCenterX()\r\n            speedX = 0f\r\n            speedY = 0f\r\n\r\n\r\n        }\r\n        if (posY + size > bounds.bottom){\r\n            posY = bounds.exactCenterY()\r\n            posX = bounds.exactCenterX()\r\n            speedX = 0f\r\n            speedY = 0f\r\n\r\n        }\r\n    }\r\n\r\n    fun update(){\r\n\r\n        posY += speedY\r\n        posX += speedX\r\n\r\n    }\r\n\r\n    fun draw(canvas: Canvas?){\r\n\r\n        canvas?.drawCircle(posX, posY, size, paint)\r\n    }\r\n\r\n\r\n    interface GameListener{\r\n        fun startPongMenu()\r\n\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/gameboy/Ball.kt b/app/src/main/java/com/example/gameboy/Ball.kt
+--- a/app/src/main/java/com/example/gameboy/Ball.kt	(revision 4ff82187b1c0e84deebf90b5c1eac3f8e24874d9)
++++ b/app/src/main/java/com/example/gameboy/Ball.kt	(date 1702846229859)
+@@ -32,20 +32,13 @@
+             speedX *= -1
+ 
+         }
+-        if (posY - size <0){
+-            posY = bounds.exactCenterY()
+-            posX = bounds.exactCenterX()
+-            speedX = 0f
+-            speedY = 0f
+-
+-
+-        }
+-        if (posY + size > bounds.bottom){
++        if (posY - size <0 || posY + size > bounds.bottom){
+             posY = bounds.exactCenterY()
+             posX = bounds.exactCenterX()
+             speedX = 0f
+             speedY = 0f
+ 
++
+         }
+     }
+ 
+Index: app/src/main/java/com/example/gameboy/GameView.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.example.gameboy\r\n\r\nimport android.content.Context\r\nimport android.graphics.Canvas\r\nimport android.graphics.Color\r\nimport android.graphics.Rect\r\nimport android.util.Log\r\nimport android.view.MotionEvent\r\nimport android.view.SurfaceHolder\r\nimport android.view.SurfaceView\r\nclass GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {\r\n\r\n    private var thread: Thread? = null\r\n    private var running = false\r\n    lateinit var canvas: Canvas\r\n    private lateinit var ball: Ball\r\n    private lateinit var padel1: Paddle\r\n    private lateinit var padel2: Paddle\r\n    private var bounds = Rect()\r\n    var mHolder: SurfaceHolder? = holder\r\n    var highscore = 0\r\n    var highScoreListener: HighScoreListener? = null\r\n\r\n    init {\r\n        if (mHolder != null) {\r\n            mHolder?.addCallback(this)\r\n        }\r\n        setup()\r\n    }\r\n\r\n    private fun setup() {\r\n        ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)\r\n        padel1 = Paddle(this.context, 100f, 100f, 200f, 30f, 5f, 5f)\r\n        padel2 = Paddle(this.context, 100f, 1200f, 200f, 30f, 5f, 5f)\r\n        ball.paint.color = Color.RED\r\n        padel1.paint.color = Color.WHITE\r\n        padel2.paint.color = Color.WHITE\r\n    }\r\n\r\n    fun ball(b1: Ball, b2: Paddle) {\r\n        ball.speedY *= -1\r\n        padel1.speedY = 0f\r\n        padel2.speedY = 0f\r\n    }\r\n\r\n    fun intersects(ball: Ball, padel: Paddle) {\r\n        val closestX = clamp(ball.posX, padel.posX - padel.width / 2, padel.posX + padel.width / 2)\r\n        val closestY =\r\n            clamp(ball.posY, padel.posY - padel.height / 2, padel.posY + padel.height / 2)\r\n\r\n        val distanceX = ball.posX - closestX\r\n        val distanceY = ball.posY - closestY\r\n\r\n        val distanceSquared = distanceX * distanceX + distanceY * distanceY\r\n\r\n        if (distanceSquared <= (ball.size / 2) * (ball.size / 2)) {\r\n            ball(ball, padel)\r\n            highscore++\r\n            Log.d(\"HighScore\", \"Current High Score: $highscore\")\r\n\r\n            highScoreListener?.onHighScoreUpdated(highscore)\r\n        }\r\n    }\r\n\r\n    fun clamp(value: Float, min: Float, max: Float): Float {\r\n        return Math.max(min, Math.min(max, value))\r\n    }\r\n\r\n    fun start() {\r\n        running = true\r\n        thread = Thread(this)\r\n        thread?.start()\r\n    }\r\n\r\n    fun stop() {\r\n        running = false\r\n        try {\r\n            thread?.join()\r\n        } catch (e: InterruptedException) {\r\n            e.printStackTrace()\r\n        }\r\n    }\r\n\r\n    fun update() {\r\n        ball.update()\r\n        padel1.update()\r\n        padel2.update()\r\n    }\r\n\r\n    fun draw() {\r\n        canvas = mHolder!!.lockCanvas()\r\n        canvas.drawColor(Color.BLACK)\r\n        ball.draw(canvas)\r\n        padel1.speedY = 0f\r\n        padel1.drawPadel(canvas)\r\n        padel2.speedY = 0f\r\n        padel2.drawPadel((canvas))\r\n        mHolder!!.unlockCanvasAndPost(canvas)\r\n\r\n    }\r\n\r\n    override fun onTouchEvent(event: MotionEvent?): Boolean {\r\n        val sX = event?.x.toString()\r\n        padel1.posX = sX.toFloat()\r\n        padel2.posX = sX.toFloat()\r\n\r\n        return true\r\n    }\r\n\r\n    override fun surfaceCreated(p0: SurfaceHolder) {\r\n\r\n    }\r\n\r\n    override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {\r\n        bounds = Rect(0, 0, p2, p3)\r\n        start()\r\n    }\r\n\r\n    override fun surfaceDestroyed(p0: SurfaceHolder) {\r\n        stop()\r\n    }\r\n\r\n    override fun run() {\r\n        while (running) {\r\n            Log.d(\"GameView\", \"Updating and Drawing\")\r\n            update()\r\n            draw()\r\n            ball.checkBounds(bounds)\r\n            padel1.checkBounds(bounds)\r\n            padel2.checkBounds(bounds)\r\n\r\n            intersects(ball, padel1)\r\n            intersects(ball, padel2)\r\n\r\n            }\r\n        }\r\n    }\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/java/com/example/gameboy/GameView.kt b/app/src/main/java/com/example/gameboy/GameView.kt
+--- a/app/src/main/java/com/example/gameboy/GameView.kt	(revision 4ff82187b1c0e84deebf90b5c1eac3f8e24874d9)
++++ b/app/src/main/java/com/example/gameboy/GameView.kt	(date 1702857299916)
+@@ -20,6 +20,7 @@
+     var mHolder: SurfaceHolder? = holder
+     var highscore = 0
+     var highScoreListener: HighScoreListener? = null
++    private var gameOver = false
+ 
+     init {
+         if (mHolder != null) {
+@@ -120,6 +121,11 @@
+         stop()
+     }
+ 
++    private fun isGameOver(): Boolean {
++        // Implement your game over logic here
++        return gameOver
++    }
++
+     override fun run() {
+         while (running) {
+             Log.d("GameView", "Updating and Drawing")
+Index: app/src/main/res/layout/fragment_play_pong.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<RelativeLayout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:layout_width=\"match_parent\"\r\n    android:layout_height=\"match_parent\">\r\n\r\n    <FrameLayout\r\n        android:id=\"@+id/frame5\"\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"match_parent\">\r\n\r\n    </FrameLayout>\r\n    <TextView\r\n        android:id=\"@+id/textViewPongScore\"\r\n        android:layout_width=\"wrap_content\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:textColor=\"@color/vit\"\r\n        android:text=\"score:\"\r\n        android:layout_gravity=\"center\" />\r\n</RelativeLayout>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/app/src/main/res/layout/fragment_play_pong.xml b/app/src/main/res/layout/fragment_play_pong.xml
+--- a/app/src/main/res/layout/fragment_play_pong.xml	(revision 4ff82187b1c0e84deebf90b5c1eac3f8e24874d9)
++++ b/app/src/main/res/layout/fragment_play_pong.xml	(date 1702857300488)
+@@ -17,4 +17,16 @@
+         android:textColor="@color/vit"
+         android:text="score:"
+         android:layout_gravity="center" />
++
++    <TextView
++        android:id="@+id/textViewGameOver"
++        android:layout_width="wrap_content"
++        android:layout_height="wrap_content"
++        android:text="Game Over"
++        android:textSize="40sp"
++        android:textColor="@color/rod1"
++        android:layout_centerHorizontal="true"
++        android:layout_centerVertical="true"
++        android:visibility="gone"
++        />
+ </RelativeLayout>

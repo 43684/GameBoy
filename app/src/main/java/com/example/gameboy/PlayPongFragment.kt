@@ -1,5 +1,6 @@
 package com.example.gameboy
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -7,10 +8,25 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.example.gameboy.databinding.FragmentPlayPongBinding
+import org.checkerframework.common.reflection.qual.NewInstance
 
-class PlayPongFragment : Fragment(), HighScoreListener {
+class PlayPongFragment : Fragment(), HighScoreListener, GameView.VisibilityListener {
 
     lateinit var binding: FragmentPlayPongBinding
+
+    var listener: PlayPongFragment.GameListener? = null
+
+    override fun onAttach(context: Context){
+        super.onAttach(context)
+
+        try{
+            listener = context as PlayPongFragment.GameListener
+            println("Successful implementation in play pong fragment")
+        } catch (e: Exception){
+            println("Failed implementation")
+        }
+
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -27,8 +43,32 @@ class PlayPongFragment : Fragment(), HighScoreListener {
 
         frameLayout.addView(gameView)
 
+        binding.btnPlayAgain.setOnClickListener(View.OnClickListener {
+
+            listener?.startPong()
+
+
+        } )
+
+        binding.btnMainMenu.setOnClickListener(View.OnClickListener {
+
+            listener?.startPongMenu()
+
+
+        } )
+
         return rootView
     }
+
+    override fun makeVisible(){
+        activity?.runOnUiThread{
+        binding.cwGameOver.visibility = View.VISIBLE
+
+        }
+        println("Hallo")
+    }
+
+
 
     /***
      * Här nedan
@@ -36,6 +76,18 @@ class PlayPongFragment : Fragment(), HighScoreListener {
     override fun onHighScoreUpdated(highScore: Int) {
         activity?.runOnUiThread {
             binding.textViewPongScore.text = "Score: $highScore"
+            binding.tvFinalScore.text ="Final score is: $highScore"
         }
     }
+
+    override fun onDetach(){
+        super.onDetach()
+        listener = null
+    }
+    interface GameListener{
+        fun startPong()
+        fun startPongMenu()
+
+    }
+
 }
