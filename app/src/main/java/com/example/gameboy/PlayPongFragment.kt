@@ -1,6 +1,7 @@
 package com.example.gameboy
 
 import android.content.Context
+import android.media.MediaPlayer
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -8,12 +9,11 @@ import android.view.ViewGroup
 import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.example.gameboy.databinding.FragmentPlayPongBinding
-import org.checkerframework.common.reflection.qual.NewInstance
 
 class PlayPongFragment : Fragment(), HighScoreListener, GameView.VisibilityListener {
 
     lateinit var binding: FragmentPlayPongBinding
-
+    private lateinit var mediaPlayer: MediaPlayer
     var listener: PlayPongFragment.GameListener? = null
 
     override fun onAttach(context: Context){
@@ -34,20 +34,16 @@ class PlayPongFragment : Fragment(), HighScoreListener, GameView.VisibilityListe
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentPlayPongBinding.inflate(inflater)
-
         val gameView = GameView(requireContext())
         gameView.highScoreListener = this
-
         val rootView = binding.root
         val frameLayout = rootView.findViewById<FrameLayout>(R.id.frame5)
 
         frameLayout.addView(gameView)
+        startMediaPlayer()
 
         binding.btnPlayAgain.setOnClickListener(View.OnClickListener {
-
             listener?.startPong()
-
-
         } )
 
         binding.btnMainMenu.setOnClickListener(View.OnClickListener {
@@ -59,7 +55,10 @@ class PlayPongFragment : Fragment(), HighScoreListener, GameView.VisibilityListe
 
         return rootView
     }
-
+    fun startMediaPlayer() {
+        mediaPlayer = MediaPlayer.create(this@PlayPongFragment.requireContext(), R.raw.mario)
+        mediaPlayer.start()
+    }
     override fun makeVisible(){
         activity?.runOnUiThread{
         binding.cwGameOver.visibility = View.VISIBLE
@@ -90,4 +89,13 @@ class PlayPongFragment : Fragment(), HighScoreListener, GameView.VisibilityListe
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        mediaPlayer.stop()
+        mediaPlayer.release()
+    }
+
 }
+
+
+

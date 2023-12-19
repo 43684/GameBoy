@@ -10,13 +10,16 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.gameboy.databinding.FragmentSelectGameBinding
-import com.google.firebase.database.*
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 
 class GameSelectFragment : Fragment() {
 
     private lateinit var adapter: HighScoreAdapter
     private val userList = mutableListOf<UserData>()
-
     lateinit var binding: FragmentSelectGameBinding
     var listener: GameListener? = null
 
@@ -43,8 +46,12 @@ class GameSelectFragment : Fragment() {
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
         recyclerView.adapter = adapter
 
+
         return binding.root
     }
+
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -101,4 +108,6 @@ class GameSelectFragment : Fragment() {
             }
         })
     }
-}
+
+    }
+
