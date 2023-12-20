@@ -54,7 +54,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private fun setup() {
         ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
         padel1 = Paddle(this.context, 500f, 200f, 200f, 20f, 5f, 5f)
-        padel2 = Paddle(this.context, 500f, 1400f, 200f, 20f, 5f, 5f)
+        padel2 = Paddle(this.context, 500f, 2000f, 200f, 20f, 5f, 5f)
         ball.paint.color = Color.RED
         padel1.paint.color = Color.WHITE
         padel2.paint.color = Color.WHITE
@@ -67,7 +67,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     }
 
     fun intersects(ball: Ball, paddle: Paddle) {
-        if (ball.posY > 199 || ball.posY < 1401) {
+        if (ball.posY > 199 || ball.posY < 2001) {
             val closestX = clamp(ball.posX, paddle.posX - paddle.width / 2, paddle.posX + paddle.width / 2)
             val closestY = clamp(ball.posY, paddle.posY - paddle.height / 2, paddle.posY + paddle.height / 2)
 
