@@ -54,7 +54,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private fun setup() {
         ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
         padel1 = Paddle(this.context, 500f, 200f, 200f, 20f, 5f, 5f)
-        padel2 = Paddle(this.context, 500f, 1400f, 200f, 20f, 5f, 5f)
+        padel2 = Paddle(this.context, 500f, 2000f, 200f, 20f, 5f, 5f)
         ball.paint.color = Color.RED
         padel1.paint.color = Color.WHITE
         padel2.paint.color = Color.WHITE
