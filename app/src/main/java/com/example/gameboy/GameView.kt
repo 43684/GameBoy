@@ -10,12 +10,22 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+import androidx.core.graphics.alpha
 import androidx.fragment.app.findFragment
+
 import java.lang.Math.atan2
 import java.lang.Math.cos
 import java.lang.Math.sin
 import java.lang.Math.sqrt
 import kotlin.math.sqrt
+
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
+
 
 class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
@@ -44,7 +54,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     private fun setup() {
         ball = Ball(this.context, 500f, 500f, 50f, -5f, 5f)
         padel1 = Paddle(this.context, 500f, 200f, 200f, 20f, 5f, 5f)
-        padel2 = Paddle(this.context, 500f, 1400f, 200f, 20f, 5f, 5f)
+        padel2 = Paddle(this.context, 500f, 1600f, 200f, 20f, 5f, 5f)
         ball.paint.color = Color.RED
         padel1.paint.color = Color.WHITE
         padel2.paint.color = Color.WHITE
@@ -57,7 +67,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     }
 
     fun intersects(ball: Ball, paddle: Paddle) {
-        if (ball.posY > 199 || ball.posY < 1401) {
+        if (ball.posY > 199 || ball.posY < 2001) {
             val closestX = clamp(ball.posX, paddle.posX - paddle.width / 2, paddle.posX + paddle.width / 2)
             val closestY = clamp(ball.posY, paddle.posY - paddle.height / 2, paddle.posY + paddle.height / 2)
 
@@ -79,10 +89,6 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
                     ball.speedY *= 1.2f
                 }
 
-                if (saveHighscore < highscore) {
-                    saveHighscore = highscore
-                    Log.d("saveHighscore", "saved highscore: $highscore")
-                }
 
                 // Update ball position based on collision point
                 val angle = atan2(distanceY.toDouble(), distanceX.toDouble())
@@ -186,9 +192,7 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
         running = false
         findFragment<PlayPongFragment>().makeVisible()
 
-        /**
-         *  updateData()
-          */
+        updateHighScore(highscore)
 
 
     }
@@ -196,5 +200,45 @@ class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback,
     interface VisibilityListener {
         fun makeVisible()
     }
+
+    fun updateHighScore(newHighScore: Int) {
+        val auth: FirebaseAuth = FirebaseAuth.getInstance()
+        val database: DatabaseReference = FirebaseDatabase.getInstance().reference
+        // Get the current user's UID from FirebaseAuth
+        val uid: String? = auth.currentUser?.uid
+
+        if (uid != null) {
+            // Reference to the user's data in the Firebase database
+            val userRef: DatabaseReference = database.child("users").child(uid)
+
+            // Read the current high score from the database
+            userRef.child("highscore").addListenerForSingleValueEvent(object : ValueEventListener {
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    val currentHighScore = dataSnapshot.getValue(Int::class.java)
+
+                    // Check if the new high score is higher than the existing one
+                    if (currentHighScore == null || newHighScore > currentHighScore) {
+                        // Update the high score in the database
+                        userRef.child("highscore").setValue(newHighScore)
+                            .addOnSuccessListener {
+                                println("High score updated successfully!")
+                            }
+                            .addOnFailureListener { e ->
+                                println("Error updating high score: ${e.message}")
+                            }
+                    } else {
+                        println("New high score is not higher than the existing one.")
+                    }
+                }
+
+                override fun onCancelled(databaseError: DatabaseError) {
+                    println("Error reading user data: ${databaseError.message}")
+                }
+            })
+        } else {
+            println("User not authenticated.")
+        }
+    }
+
 
 }
