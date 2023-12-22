@@ -27,6 +27,8 @@
             android:layout_height="150sp"
             android:backgroundTint="@color/vit"
             android:text="@string/pong_button"
+            android:fontFamily="@font/arcade_n"
+
             android:textColor="@color/black"
             android:textSize="25sp"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -42,8 +44,10 @@
             android:layout_height="150sp"
             android:backgroundTint="@color/rod1"
             android:text="@string/air_hockey_button"
+            android:fontFamily="@font/arcade_n"
+
             android:textColor="@color/black"
-            android:textSize="25sp"
+            android:textSize="17sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.877"

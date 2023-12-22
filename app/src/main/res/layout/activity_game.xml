@@ -11,7 +11,6 @@
         android:id="@+id/logoutButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:backgroundTint="@color/vit"
         android:text="@string/log_out"
         android:textColor="@color/svart"
         android:textSize="25sp"

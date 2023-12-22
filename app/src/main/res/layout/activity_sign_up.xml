@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@drawable/signup_screen"
+    android:background="@drawable/signin_screen"
     tools:context=".SignUpActivity">
     <com.google.android.material.textfield.TextInputLayout
         android:id="@+id/nameLayout"
@@ -24,6 +24,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Type your Name"
+            android:fontFamily="@font/arcade_n"
+            android:textColor="@color/yellow1"
+            android:textSize="15sp"
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -32,6 +35,9 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
+        android:fontFamily="@font/arcade_n"
+        android:textColor="@color/yellow1"
+        android:textSize="15sp"
         android:layout_marginTop="24dp"
         app:boxStrokeColor="@color/yellow"
         app:hintTextColor="@color/yellow"
@@ -46,6 +52,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Type your Email"
+            android:fontFamily="@font/arcade_n"
+            android:textColor="@color/yellow1"
+            android:textSize="15sp"
+
             android:inputType="textEmailAddress" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -68,6 +78,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Type Your Password"
+            android:fontFamily="@font/arcade_n"
+            android:textColor="@color/yellow1"
+            android:textSize="15sp"
+
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -90,6 +104,10 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Retype Your Password"
+            android:fontFamily="@font/arcade_n"
+            android:textColor="@color/yellow1"
+            android:textSize="15sp"
+
             android:inputType="textPassword" />
     </com.google.android.material.textfield.TextInputLayout>
 
@@ -100,6 +118,8 @@
         android:layout_marginHorizontal="16dp"
         android:background="@color/yellow"
         android:text="Sign Up"
+        android:fontFamily="@font/arcade_n"
+
         android:textColor="@color/black"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -111,11 +131,41 @@
         android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
+        android:textColor="@color/white"
+        android:fontFamily="@font/arcade_n"
+
         android:text="Already Registered , Sign In !"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button" />
+
+    <TextView
+        android:id="@+id/textView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/arcade_n"
+        android:text="Wellcome"
+        android:textColor="@color/yellow1"
+        android:textSize="35sp"
+        app:layout_constraintBottom_toTopOf="@+id/nameLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textView6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/arcade_n"
+        android:text="Please register to continue"
+
+        android:textAlignment="center"
+        android:textColor="@color/yellow1"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/nameLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView5" />
 </androidx.constraintlayout.widget.ConstraintLayout>
