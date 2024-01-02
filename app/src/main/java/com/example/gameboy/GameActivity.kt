@@ -40,6 +40,12 @@ class GameActivity : AppCompatActivity(),PlayPongFragment.GameListener,
 
     }
 
+    override fun startHockey() {
+        supportFragmentManager.commit {
+            replace(R.id.frame3, PlayHockeyFragment())
+        }
+    }
+
         fun logoutUser() {
             val auth = FirebaseAuth.getInstance()
             auth.signOut()
