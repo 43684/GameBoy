@@ -7,7 +7,7 @@ import androidx.fragment.app.commit
 import com.example.gameboy.databinding.ActivityGameBinding
 import com.google.firebase.auth.FirebaseAuth
 
-class GameActivity : AppCompatActivity(),PlayPongFragment.GameListener,
+class GameActivity : AppCompatActivity(), PlayPongFragment.GameListener,
     GameSelectFragment.GameListener {
 
     lateinit var binding: ActivityGameBinding
@@ -37,14 +37,19 @@ class GameActivity : AppCompatActivity(),PlayPongFragment.GameListener,
         supportFragmentManager.commit {
             replace(R.id.frame3, GameSelectFragment())
         }
-
     }
 
-        fun logoutUser() {
-            val auth = FirebaseAuth.getInstance()
-            auth.signOut()
-            val intent = Intent(this, SignInActivity::class.java)
-            startActivity(intent)
-            finish()
+    override fun startHockey() {
+        supportFragmentManager.commit {
+            replace(R.id.frame3, PlayHockeyFragment())
         }
     }
+
+    fun logoutUser() {
+        val auth = FirebaseAuth.getInstance()
+        auth.signOut()
+        val intent = Intent(this, SignInActivity::class.java)
+        startActivity(intent)
+        finish()
+    }
+}

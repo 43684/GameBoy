@@ -58,6 +58,11 @@ class GameSelectFragment : Fragment() {
 
         fetchData()
 
+        binding.btn2.setOnClickListener(View.OnClickListener {
+            listener?.startHockey()
+            println("hockey")
+        })
+
         binding.btn1.setOnClickListener(View.OnClickListener {
             listener?.startPong()
             println("clicking")
@@ -73,6 +78,7 @@ class GameSelectFragment : Fragment() {
     interface GameListener {
         fun startPongMenu()
         fun startPong()
+        fun startHockey()
     }
 
     private fun fetchData() {
