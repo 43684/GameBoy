@@ -127,8 +127,6 @@ class GameViewPong(context: Context) : SurfaceView(context), SurfaceHolder.Callb
 
     fun update() {
         ball.update()
-        padel1.update()
-        padel2.update()
     }
 
     fun draw() {

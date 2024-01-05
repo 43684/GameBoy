@@ -34,10 +34,4 @@ class Paddle(context: Context, var posX: Float, var posY: Float, var width: Floa
     fun drawPadel(canvas: Canvas?) {
         canvas?.drawRect(posX - width / 2, posY - height / 2, posX + width / 2, posY + height / 2, paint)
     }
-
-    fun update() {
-
-
-    }
-
 }
