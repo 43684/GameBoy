@@ -4,7 +4,6 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
-import android.view.ActionProvider.VisibilityListener
 import androidx.fragment.app.Fragment
 
 class Ball(
@@ -17,7 +16,6 @@ class Ball(
 ) : Fragment() {
 
     var paint = Paint()
-
 
     fun checkBounds(bounds: Rect): Boolean {
         var gameOver = false

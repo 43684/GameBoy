@@ -3,63 +3,74 @@ package com.example.gameboy
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Rect
 import android.view.SurfaceHolder
 import android.view.SurfaceView
+class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
-class GameViewHockey (context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
-
-    private var thread : Thread? = null
+    private var thread: Thread? = null
     private var running = false
     lateinit var canvas: Canvas
     private lateinit var puck: Puck
-    var mHolder : SurfaceHolder? = holder
+    var mHolder: SurfaceHolder? = holder
+    private var bounds = Rect()
+
     init {
-        if (mHolder != null){
+        if (mHolder != null) {
             mHolder?.addCallback(this)
         }
         setup()
     }
 
-    fun start(){
+    fun start() {
         running = true
         thread = Thread(this)
         thread?.start()
     }
 
-    fun stop(){
+    fun stop() {
         running = false
         try {
             thread?.join()
-        } catch (e:InterruptedException){
+        } catch (e: InterruptedException) {
             e.printStackTrace()
         }
     }
 
-    fun update(){
+    fun update() {
         puck.update()
     }
 
+    fun draw() {
+        canvas = mHolder!!.lockCanvas()
+        canvas.drawColor(Color.BLUE)
+        puck.draw(canvas)
+        mHolder!!.unlockCanvasAndPost(canvas)
+    }
 
-
-    private fun setup(){
+    private fun setup() {
         puck = Puck(this.context, 500f, 500f, 50f, -5f, 5f)
         puck.paint.color = Color.RED
     }
+
     override fun surfaceCreated(holder: SurfaceHolder) {
-        TODO("Not yet implemented")
     }
 
     override fun surfaceChanged(holder: SurfaceHolder, format: Int, width: Int, height: Int) {
-        TODO("Not yet implemented")
+        bounds = Rect(0, 0, width, height)
+        start()
     }
 
     override fun surfaceDestroyed(holder: SurfaceHolder) {
-        TODO("Not yet implemented")
+        stop()
     }
 
     override fun run() {
-        TODO("Not yet implemented")
+        while (running) {
+            update()
+            draw()
+            val gameOver = puck.checkBounds(bounds)
+            puck.checkBounds(bounds)
+        }
     }
-
-
 }

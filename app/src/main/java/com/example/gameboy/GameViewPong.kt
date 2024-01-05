@@ -235,6 +235,4 @@ class GameViewPong(context: Context) : SurfaceView(context), SurfaceHolder.Callb
             println("User not authenticated.")
         }
     }
-
-
 }
