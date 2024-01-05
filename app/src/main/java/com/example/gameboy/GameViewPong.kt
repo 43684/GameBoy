@@ -10,13 +10,11 @@ import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import androidx.core.graphics.alpha
 import androidx.fragment.app.findFragment
 
 import java.lang.Math.atan2
 import java.lang.Math.cos
 import java.lang.Math.sin
-import java.lang.Math.sqrt
 import kotlin.math.sqrt
 
 import com.google.firebase.auth.FirebaseAuth
@@ -27,7 +25,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 
 
-class GameView(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
+class GameViewPong(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
     private var thread: Thread? = null
     private var running = false
