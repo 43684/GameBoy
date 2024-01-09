@@ -134,9 +134,9 @@ class GameViewPong(context: Context) : SurfaceView(context), SurfaceHolder.Callb
         canvas.drawColor(Color.BLACK)
         ball.draw(canvas)
         padel1.speedY = 0f
-        padel1.drawPadel(canvas)
+        padel1.drawPaddelPong(canvas)
         padel2.speedY = 0f
-        padel2.drawPadel((canvas))
+        padel2.drawPaddelPong((canvas))
         mHolder!!.unlockCanvasAndPost(canvas)
 
     }

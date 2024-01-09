@@ -7,7 +7,7 @@ import androidx.fragment.app.commit
 import com.example.gameboy.databinding.ActivityGameBinding
 import com.google.firebase.auth.FirebaseAuth
 
-class GameActivity : AppCompatActivity(), PlayPongFragment.GameListener,
+class GameActivity : AppCompatActivity(), PlayPongFragment.GameListener,PlayHockeyFragment.GameListener,
     GameSelectFragment.GameListener {
 
     lateinit var binding: ActivityGameBinding

@@ -83,9 +83,9 @@ class PlayPongFragment : Fragment(), HighScoreListener, GameViewPong.VisibilityL
         super.onDetach()
         listener = null
     }
-    interface GameListener{
+    interface GameListener : PlayHockeyFragment.GameListener {
         fun startPong()
-        fun startPongMenu()
+        override fun startPongMenu()
 
     }
 
