@@ -42,8 +42,8 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         setup()
     }
     private fun setup() {
-        paddle1 = PaddleHockey(this.context, 500f, 200f, 200f, 20f, 5f, 5f)
-        paddle2 = PaddleHockey(this.context, 500f, 1600f, 200f, 20f, 5f, 5f)
+        paddle1 = PaddleHockey(this.context, 500f, 200f, 200f, 100f, 5f, 5f)
+        paddle2 = PaddleHockey(this.context, 500f, 1600f, 200f, 100f, 5f, 5f)
         paddle1.paint.color = Color.RED
         paddle2.paint.color = Color.WHITE
         puck = Puck(this.context, 500f, 500f, 50f, -5f, 5f)
