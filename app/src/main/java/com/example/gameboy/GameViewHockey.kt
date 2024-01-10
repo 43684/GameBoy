@@ -46,7 +46,7 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         paddle2 = PaddleHockey(this.context, 500f, 1600f, 200f, 100f, 5f, 5f)
         paddle1.paint.color = Color.RED
         paddle2.paint.color = Color.WHITE
-        puck = Puck(this.context, 500f, 500f, 50f, -5f, 5f)
+        puck = Puck(this.context, width, height, 500f, 500f, 50f, -5f, 5f)
         puck.paint.color = Color.RED
     }
 
@@ -55,45 +55,41 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         paddle1.speedY = 0f
         paddle2.speedY = 0f
     }
-    fun intersects(puck:Puck, paddle: PaddleHockey) {
-        if (puck.posY > 199 || puck.posY < 2001) {
-            val closestX = clamp(puck.posX, paddle.posX - paddle.width / 2, paddle.posX + paddle.width / 2)
-            val closestY = clamp(puck.posY, paddle.posY - paddle.height / 2, paddle.posY + paddle.height / 2)
+    fun intersects(puck: Puck, paddle: PaddleHockey) {
+        val closestX = clamp(puck.posX, paddle.posX - paddle.width / 2, paddle.posX + paddle.width / 2)
+        val closestY = clamp(puck.posY, paddle.posY - paddle.height / 2, paddle.posY + paddle.height / 2)
 
-            val distanceX = puck.posX - closestX
-            val distanceY = puck.posY - closestY
+        val distanceX = puck.posX - closestX
+        val distanceY = puck.posY - closestY
 
-            val distanceSquared = distanceX * distanceX + distanceY * distanceY
+        val distanceSquared = distanceX * distanceX + distanceY * distanceY
 
-            if (distanceSquared <= (puck.size / 2) * (puck.size / 2) && !collisionCooldown) {
-                // Handle collision
-                puck(puck, paddle)
-                highscore++
-                Log.d("HighScore", "Current High Score: $highscore")
+        if (distanceSquared <= (puck.size / 2) * (puck.size / 2) && !collisionCooldown) {
+            // Handle collision
+            puck(puck, paddle)
+           // highscore++
+            //            Log.d("HighScore", "Current High Score: $highscore")
+            //
+            //            highScoreListener?.onHighScoreUpdated(highscore)
+            //
+            //            if (highscore > 1 && highscore % 2 == 0) {
+            //                puck.speedX *= 1.2f
+            //                puck.speedY *= 1.2f
+            //            }
+            // Update ball position based on collision point
+            val angle = Math.atan2(distanceY.toDouble(), distanceX.toDouble())
+            val overlap = (puck.size / 2) - sqrt(distanceSquared)
+            val newX = puck.posX + (overlap * Math.cos(angle)).toFloat()
+            val newY = puck.posY + (overlap * Math.sin(angle)).toFloat()
 
-                highScoreListener?.onHighScoreUpdated(highscore)
+            puck.posX = newX
+            puck.posY = newY
 
-                if (highscore > 1 && highscore % 2 == 0) {
-                    puck.speedX *= 1.2f
-                    puck.speedY *= 1.2f
-                }
-
-
-                // Update ball position based on collision point
-                val angle = Math.atan2(distanceY.toDouble(), distanceX.toDouble())
-                val overlap = (puck.size / 2) - sqrt(distanceSquared)
-                val newX = puck.posX + (overlap * Math.cos(angle)).toFloat()
-                val newY = puck.posY + (overlap * Math.sin(angle)).toFloat()
-
-                puck.posX = newX
-                puck.posY = newY
-
-                // Set collision cooldown
-                collisionCooldown = true
-                Handler(Looper.getMainLooper()).postDelayed({
-                    collisionCooldown = false
-                }, collisionCooldownTime)
-            }
+            // Set collision cooldown
+            collisionCooldown = true
+            Handler(Looper.getMainLooper()).postDelayed({
+                collisionCooldown = false
+            }, collisionCooldownTime)
         }
     }
     fun clamp(value: Float, min: Float, max: Float): Float {
