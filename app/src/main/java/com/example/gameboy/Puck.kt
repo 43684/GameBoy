@@ -4,6 +4,7 @@ import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Paint
 import android.graphics.Rect
+import android.util.Log
 import androidx.fragment.app.Fragment
 class Puck(
     context: Context,
@@ -17,15 +18,24 @@ class Puck(
 ) : Fragment() {
 
     var paint = Paint()
+    var highscore = 0
+    var highScoreListener: HighScoreListener? = null
 
     fun checkBounds(bounds: Rect): Boolean {
         var gameOver = false
 
         if (posY < bounds.top) {
-            // The puck has gone outside the top of the screen
+            //puck has gone outside the top of screen
+            highscore++
+            Log.d("HighScore", "Current High Score: $highscore")
+            highScoreListener?.onHighScoreUpdated(highscore)
+
+            // Reset position
             resetPosition()
-            return false  // Return false to indicate that the game is not over
+
+            return false  // Return false, the game is not over
         }
+
 
         if (posX - size < 0) {
             this.speedX *= -1f
@@ -45,8 +55,8 @@ class Puck(
     }
 
     fun resetPosition() {
-        posX = screenWidth / 2f
-        posY = screenHeight / 2f
+        posX = 500f
+        posY = 500f
     }
 
     fun update() {
