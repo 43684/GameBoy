@@ -8,8 +8,6 @@ import android.util.Log
 import androidx.fragment.app.Fragment
 class Puck(
     context: Context,
-    var screenWidth: Int,
-    var screenHeight: Int,
     var posX: Float,
     var posY: Float,
     var size: Float,
@@ -33,7 +31,7 @@ class Puck(
             // Reset position
             resetPosition()
 
-            return false  // Return false, the game is not over
+            return false  // Return false, game is not over
         }
 
 
