@@ -68,15 +68,10 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         if (distanceSquared <= (puck.size / 2) * (puck.size / 2) && !collisionCooldown) {
             // Handle collision
             puck(puck, paddle)
-           // highscore++
-            //            Log.d("HighScore", "Current High Score: $highscore")
-            //
-            //            highScoreListener?.onHighScoreUpdated(highscore)
-            //
-            //            if (highscore > 1 && highscore % 2 == 0) {
-            //                puck.speedX *= 1.2f
-            //                puck.speedY *= 1.2f
-            //            }
+            if (highscore > 1 && highscore % 2 == 0) {
+                puck.speedX *= 1.2f
+            }
+            puck.speedY *= 1.2f
             // Update ball position based on collision point
             val angle = Math.atan2(distanceY.toDouble(), distanceX.toDouble())
             val overlap = (puck.size / 2) - sqrt(distanceSquared)
