@@ -11,6 +11,7 @@ import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
 import androidx.core.math.MathUtils.clamp
+import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -20,7 +21,7 @@ import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
 import kotlin.math.sqrt
 
-class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
+class GameViewHockey(context: Context, var listener: HighScoreListener) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
     private var thread: Thread? = null
     private var running = false
@@ -46,7 +47,7 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         paddle2 = PaddleHockey(this.context, 500f, 1600f, 200f, 100f, 5f, 5f)
         paddle1.paint.color = Color.RED
         paddle2.paint.color = Color.WHITE
-        puck = Puck(this.context,500f, 500f, 50f, -5f, 5f)
+        puck = Puck(this.context, listener,500f, 500f, 50f, -5f, 5f)
         puck.paint.color = Color.RED
     }
 
@@ -123,6 +124,9 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         paddle2.speedY = 0f
         paddle2.drawPaddleHockey(canvas)
         mHolder!!.unlockCanvasAndPost(canvas)
+
+        invalidate()
+
     }
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event != null && event.y > height / 2) {
@@ -134,6 +138,7 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         return true
     }
     override fun surfaceCreated(holder: SurfaceHolder) {
+
     }
 
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {

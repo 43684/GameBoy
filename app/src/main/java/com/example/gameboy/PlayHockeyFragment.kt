@@ -31,7 +31,7 @@ class PlayHockeyFragment : Fragment(), HighScoreListener, GameViewPong.Visibilit
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentPlayHockeyBinding.inflate(inflater)
-        val gameView = GameViewHockey(requireContext())
+        val gameView = GameViewHockey(requireContext(),this)
         gameView.highScoreListener = this
         val rootView = binding.root
         val frameLayout = rootView.findViewById<FrameLayout>(R.id.frame5)
@@ -50,9 +50,11 @@ class PlayHockeyFragment : Fragment(), HighScoreListener, GameViewPong.Visibilit
     }
 
     override fun onHighScoreUpdated(highScore: Int) {
+        println("highscore updated, fragment")
         activity?.runOnUiThread {
             binding.textViewPongScore.text = "Score: $highScore"
             binding.tvFinalScore.text ="Final score is: $highScore"
+            println("fragment log score")
         }
     }
 
