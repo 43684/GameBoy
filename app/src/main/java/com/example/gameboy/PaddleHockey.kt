@@ -42,4 +42,11 @@ class PaddleHockey (context: Context, var posX: Float, var posY: Float, var widt
 
         // Reset the paint color to the original color
         paint.color = Color.RED
-    }}
+    }
+
+    fun update(){
+posX+=speedX
+
+    }
+}
+

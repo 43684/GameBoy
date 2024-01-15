@@ -19,6 +19,7 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlin.math.abs
 import kotlin.math.sqrt
 
 class GameViewHockey(context: Context, var listener: HighScoreListener) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
@@ -69,9 +70,9 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
             // Handle collision
             puck(puck, paddle)
             if (highscore > 1 && highscore % 2 == 0) {
-                puck.speedX *= 1.2f
+                puck.speedX *= 1.1f
             }
-            puck.speedY *= 1.2f
+            puck.speedY *= 1.1f
             // Update ball position based on collision point
             val angle = Math.atan2(distanceY.toDouble(), distanceX.toDouble())
             val overlap = (puck.size / 2) - sqrt(distanceSquared)
@@ -108,6 +109,13 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
 
     fun update() {
         puck.update()
+        paddle1.update()
+
+        if (paddle1.posX - paddle1.width / 2 < bounds.left) {
+            paddle1.speedX = abs(paddle1.speedX)  // Bounce off the left wall
+        } else if (paddle1.posX + paddle1.width / 2 > bounds.right) {
+            paddle1.speedX = -abs(paddle1.speedX)  // Bounce off the right wall
+        }
     }
 
     fun draw() {
@@ -129,6 +137,7 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
             val touchY = event.y
             paddle2.posX = touchX
             paddle2.posY = touchY
+
         }
         return true
     }
