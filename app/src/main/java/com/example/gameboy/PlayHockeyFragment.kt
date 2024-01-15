@@ -25,6 +25,7 @@ class PlayHockeyFragment : Fragment(), HighScoreListener, GameViewPong.Visibilit
         }
 
     }
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -35,6 +36,10 @@ class PlayHockeyFragment : Fragment(), HighScoreListener, GameViewPong.Visibilit
         gameView.highScoreListener = this
         val rootView = binding.root
         val frameLayout = rootView.findViewById<FrameLayout>(R.id.frame5)
+
+        // Set air hockey field image as the background
+        frameLayout.setBackgroundResource(R.drawable.airhockey3)
+
 
         frameLayout.addView(gameView)
 
@@ -60,16 +65,16 @@ class PlayHockeyFragment : Fragment(), HighScoreListener, GameViewPong.Visibilit
         super.onDetach()
         listener = null
     }
+
     override fun makeVisible(){
         activity?.runOnUiThread{
             binding.cwGameOver1.visibility = View.VISIBLE
-
         }
         println("Hallo")
     }
+
     interface GameListener{
         fun startHockey()
         fun startPongMenu()
-
     }
 }

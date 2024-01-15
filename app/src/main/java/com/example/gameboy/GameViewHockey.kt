@@ -1,16 +1,17 @@
 package com.example.gameboy
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.Matrix
 import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import androidx.core.math.MathUtils.clamp
 import androidx.fragment.app.findFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -30,16 +31,25 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     private lateinit var paddle2: PaddleHockey
     var mHolder: SurfaceHolder? = holder
     private var bounds = Rect()
+    var scaledBitmap: Bitmap? = null
     var highscore = 0
     var highScoreListener: HighScoreListener? = null
     private var collisionCooldown = false
     private val collisionCooldownTime = 500L
-
+    var bitmap: Bitmap
     init {
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
+        bitmap = BitmapFactory.decodeResource(context.resources,R.drawable.thumbnail_airhockey32)
         setup()
+    }
+    fun scaleBitmap(originalBitmap: Bitmap, scaleWidth: Float,scaleHeight: Float): Bitmap{
+        val matrix = Matrix()
+        matrix.postScale(scaleWidth, scaleHeight)
+
+        val scaledBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, matrix, true)
+        return scaledBitmap
     }
     private fun setup() {
         paddle1 = PaddleHockey(this.context, 500f, 200f, 200f, 100f, 5f, 5f)
@@ -116,7 +126,7 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
     fun draw() {
         canvas = mHolder!!.lockCanvas()
-        canvas.drawColor(Color.BLUE)
+        canvas?.drawBitmap(bitmap,0f,0f, null)
         puck.draw(canvas)
         paddle1.speedY = 0f
         paddle1.drawPaddleHockey(canvas)
@@ -137,6 +147,8 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     }
 
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
+        println(holder.surfaceFrame.width())
+        println(holder.surfaceFrame.height())
         bounds = Rect(0, 0, p2, p3)
         start()
     }
