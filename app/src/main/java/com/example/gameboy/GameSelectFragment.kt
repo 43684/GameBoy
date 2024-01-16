@@ -95,8 +95,9 @@ class GameSelectFragment : Fragment() {
                     if (userDataMap != null) {
                         val name = userDataMap["name"] as? String ?: ""
                         val highscore = (userDataMap["highscore"] as? Long)?.toInt() ?: 0
+                        val hockeyScore = (userDataMap["hockeyScore"] as? Long)?.toInt() ?: 0
 
-                        val userData = UserData(name, highscore)
+                        val userData = UserData(name, highscore,hockeyScore)
                         userList.add(userData)
 
 

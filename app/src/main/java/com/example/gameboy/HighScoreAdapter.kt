@@ -23,7 +23,7 @@ class HighScoreAdapter(private val highScores: List<UserData>) :
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val highScore = highScores[position]
         holder.playerNameTextView.text = highScore.name
-        holder.scoreTextView.text = highScore.highscore.toString()
+        holder.scoreTextView.text = "Pong: " + highScore.highscore.toString()+"\nAirH: "+highScore.hockeyScore.toString()
     }
 
     override fun getItemCount(): Int {
