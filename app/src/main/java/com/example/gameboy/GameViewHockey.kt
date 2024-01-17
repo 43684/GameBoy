@@ -1,17 +1,16 @@
 package com.example.gameboy
 
 import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
-import androidx.core.math.MathUtils.clamp
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.findFragment
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.database.DataSnapshot
@@ -36,14 +35,12 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
     var highScoreListener: HighScoreListener? = null
     private var collisionCooldown = false
     private val collisionCooldownTime = 500L
-    private val obstacles = mutableListOf<Obstacle>()
-
-
+    var bitmap: Bitmap
     init {
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
-        obstacles.add(Obstacle(200f, 400f, 100f, 50f, Color.WHITE))
+        bitmap = BitmapFactory.decodeResource(context.resources,R.drawable.edited2)
         setup()
     }
     private fun setup() {
@@ -113,7 +110,6 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
     fun update() {
         puck.update()
         paddle1.update()
-        updateObstacles()
 
         if (paddle1.posX - paddle1.width / 2 < bounds.left) {
             paddle1.speedX = abs(paddle1.speedX)  // Bounce off the left wall
@@ -121,31 +117,19 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
             paddle1.speedX = -abs(paddle1.speedX)  // Bounce off the right wall
         }
     }
-    private fun checkObstacleCollisions() {
-        for (obstacle in obstacles) {
-            if (obstacle.intersects(puck)) {
-                // Adjust puck's speed or direction upon collision with obstacle
-                puck.speedX *= -1f
-                puck.speedY *= -1f
-            }
-        }
-    }
-    private fun draw() {
+
+    fun draw() {
         canvas = mHolder!!.lockCanvas()
-        canvas.drawColor(Color.BLUE)
+        canvas?.drawBitmap(bitmap,0f,0f, null)
         puck.draw(canvas)
+        paddle1.speedY = 0f
         paddle1.drawPaddleHockey(canvas)
+        paddle2.speedY = 0f
         paddle2.drawPaddleHockey(canvas)
-        drawObstacles(canvas) // Rita hindren
         mHolder!!.unlockCanvasAndPost(canvas)
-    }
-    private fun drawObstacles(canvas: Canvas) {
-        for (obstacle in obstacles) {
-            obstacle.draw(canvas)
-        }
-    }
-    private fun updateObstacles() {
-        // Uppdatera hinderlogik här om det behövs
+
+        invalidate()
+
     }
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event != null && event.y > height / 2) {
@@ -158,7 +142,6 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         return true
     }
     override fun surfaceCreated(holder: SurfaceHolder) {
-
     }
 
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
@@ -184,8 +167,6 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
 
             intersects(puck, paddle1)
             intersects(puck, paddle2)
-
-            checkObstacleCollisions()
         }
     }
     fun onGameOver() {
