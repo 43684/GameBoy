@@ -40,7 +40,7 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
-        bitmap = BitmapFactory.decodeResource(context.resources,R.drawable.thumbnail_airhockey32)
+        bitmap = BitmapFactory.decodeResource(context.resources,R.drawable.edited2)
         setup()
     }
     private fun setup() {
