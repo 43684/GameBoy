@@ -5,7 +5,6 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.Matrix
 import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
@@ -19,9 +18,10 @@ import com.google.firebase.database.DatabaseError
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ValueEventListener
+import kotlin.math.abs
 import kotlin.math.sqrt
 
-class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
+class GameViewHockey(context: Context, var listener: HighScoreListener) : SurfaceView(context), SurfaceHolder.Callback, Runnable {
 
     private var thread: Thread? = null
     private var running = false
@@ -31,7 +31,6 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     private lateinit var paddle2: PaddleHockey
     var mHolder: SurfaceHolder? = holder
     private var bounds = Rect()
-    var scaledBitmap: Bitmap? = null
     var highscore = 0
     var highScoreListener: HighScoreListener? = null
     private var collisionCooldown = false
@@ -44,19 +43,12 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         bitmap = BitmapFactory.decodeResource(context.resources,R.drawable.thumbnail_airhockey32)
         setup()
     }
-    fun scaleBitmap(originalBitmap: Bitmap, scaleWidth: Float,scaleHeight: Float): Bitmap{
-        val matrix = Matrix()
-        matrix.postScale(scaleWidth, scaleHeight)
-
-        val scaledBitmap = Bitmap.createBitmap(originalBitmap, 0, 0, originalBitmap.width, originalBitmap.height, matrix, true)
-        return scaledBitmap
-    }
     private fun setup() {
         paddle1 = PaddleHockey(this.context, 500f, 200f, 200f, 100f, 5f, 5f)
         paddle2 = PaddleHockey(this.context, 500f, 1600f, 200f, 100f, 5f, 5f)
         paddle1.paint.color = Color.RED
         paddle2.paint.color = Color.WHITE
-        puck = Puck(this.context,500f, 500f, 50f, -5f, 5f)
+        puck = Puck(this.context, listener,500f, 500f, 50f, -5f, 5f)
         puck.paint.color = Color.RED
     }
 
@@ -77,15 +69,10 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         if (distanceSquared <= (puck.size / 2) * (puck.size / 2) && !collisionCooldown) {
             // Handle collision
             puck(puck, paddle)
-           // highscore++
-            //            Log.d("HighScore", "Current High Score: $highscore")
-            //
-            //            highScoreListener?.onHighScoreUpdated(highscore)
-            //
-            //            if (highscore > 1 && highscore % 2 == 0) {
-            //                puck.speedX *= 1.2f
-            //                puck.speedY *= 1.2f
-            //            }
+            if (highscore > 1 && highscore % 2 == 0) {
+                puck.speedX *= 1.1f
+            }
+            puck.speedY *= 1.1f
             // Update ball position based on collision point
             val angle = Math.atan2(distanceY.toDouble(), distanceX.toDouble())
             val overlap = (puck.size / 2) - sqrt(distanceSquared)
@@ -122,6 +109,13 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
 
     fun update() {
         puck.update()
+        paddle1.update()
+
+        if (paddle1.posX - paddle1.width / 2 < bounds.left) {
+            paddle1.speedX = abs(paddle1.speedX)  // Bounce off the left wall
+        } else if (paddle1.posX + paddle1.width / 2 > bounds.right) {
+            paddle1.speedX = -abs(paddle1.speedX)  // Bounce off the right wall
+        }
     }
 
     fun draw() {
@@ -133,6 +127,9 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
         paddle2.speedY = 0f
         paddle2.drawPaddleHockey(canvas)
         mHolder!!.unlockCanvasAndPost(canvas)
+
+        invalidate()
+
     }
     override fun onTouchEvent(event: MotionEvent?): Boolean {
         if (event != null && event.y > height / 2) {
@@ -147,8 +144,6 @@ class GameViewHockey(context: Context) : SurfaceView(context), SurfaceHolder.Cal
     }
 
     override fun surfaceChanged(p0: SurfaceHolder, p1: Int, p2: Int, p3: Int) {
-        println(holder.surfaceFrame.width())
-        println(holder.surfaceFrame.height())
         bounds = Rect(0, 0, p2, p3)
         start()
     }
