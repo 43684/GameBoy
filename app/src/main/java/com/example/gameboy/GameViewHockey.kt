@@ -137,6 +137,9 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
             val touchY = event.y
             paddle2.posX = touchX
             paddle2.posY = touchY
+
+            puck.posX = touchX
+            puck.posY = touchY
         }
         return true
     }

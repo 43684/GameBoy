@@ -22,7 +22,7 @@ class Puck(
     fun checkBounds(bounds: Rect): Boolean {
         var gameOver = false
 
-        if(posX > 400f && posX < 900f){
+        if(posX > 500f && posX < 800f){
         if (posY < bounds.top) {
             //puck has gone outside the top of screen
             highscore++
@@ -50,7 +50,7 @@ class Puck(
             this.posX += speedX * 2
         }
 
-        if (posX > 400f && posX < 900f){
+        if (posX > 500f && posX < 800f){
 
 
             if (posY + size > bounds.bottom) {
@@ -75,7 +75,7 @@ class Puck(
 
     fun update() {
         posY += speedY
-        posX += speedX
+
     }
 
     fun draw(canvas: Canvas?) {
