@@ -43,6 +43,8 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
+        obstacles.add(Obstacle(200f, 400f, 100f, 50f, Color.WHITE))
+        setup()
     }
     private fun setup() {
         paddle1 = PaddleHockey(this.context, 500f, 200f, 200f, 100f, 5f, 5f)
@@ -51,8 +53,6 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         paddle2.paint.color = Color.WHITE
         puck = Puck(this.context, listener,500f, 500f, 50f, -5f, 5f)
         puck.paint.color = Color.RED
-
-        obstacles.add(Obstacle(200f, 400f, 100f, 50f, Color.WHITE))
     }
 
     fun puck(b1: Puck, b2: PaddleHockey) {
@@ -113,7 +113,7 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
     fun update() {
         puck.update()
         paddle1.update()
-        updateObstacles()  // Add this line to update obstacle logic
+        updateObstacles()
 
         if (paddle1.posX - paddle1.width / 2 < bounds.left) {
             paddle1.speedX = abs(paddle1.speedX)  // Bounce off the left wall
@@ -136,7 +136,7 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         puck.draw(canvas)
         paddle1.drawPaddleHockey(canvas)
         paddle2.drawPaddleHockey(canvas)
-        drawObstacles(canvas)
+        drawObstacles(canvas) // Rita hindren
         mHolder!!.unlockCanvasAndPost(canvas)
     }
     private fun drawObstacles(canvas: Canvas) {
