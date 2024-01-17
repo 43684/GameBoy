@@ -138,8 +138,6 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
             paddle2.posX = touchX
             paddle2.posY = touchY
 
-            puck.posX = touchX
-            puck.posY = touchY
         }
         return true
     }

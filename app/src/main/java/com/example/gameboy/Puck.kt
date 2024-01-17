@@ -75,6 +75,7 @@ class Puck(
 
     fun update() {
         posY += speedY
+        posX += speedX
 
     }
 
