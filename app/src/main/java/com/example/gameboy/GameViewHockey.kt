@@ -175,48 +175,11 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         running = false
         findFragment<PlayHockeyFragment>().makeVisible()
 
-        updateHighScore(highscore)
+
     }
     interface VisibilityListener {
         fun makeVisible()
     }
 
-    fun updateHighScore(newHighScore: Int) {
-        val auth: FirebaseAuth = FirebaseAuth.getInstance()
-        val database: DatabaseReference = FirebaseDatabase.getInstance().reference
-        // Get the current user's UID from FirebaseAuth
-        val uid: String? = auth.currentUser?.uid
 
-        if (uid != null) {
-            // Reference to the user's data in the Firebase database
-            val userRef: DatabaseReference = database.child("users").child(uid)
-
-            // Read the current high score from the database
-            userRef.child("highscore").addListenerForSingleValueEvent(object : ValueEventListener {
-                override fun onDataChange(dataSnapshot: DataSnapshot) {
-                    val currentHighScore = dataSnapshot.getValue(Int::class.java)
-
-                    // Check if the new high score is higher than the existing one
-                    if (currentHighScore == null || newHighScore > currentHighScore) {
-                        // Update the high score in the database
-                        userRef.child("highscore").setValue(newHighScore)
-                            .addOnSuccessListener {
-                                println("High score updated successfully!")
-                            }
-                            .addOnFailureListener { e ->
-                                println("Error updating high score: ${e.message}")
-                            }
-                    } else {
-                        println("New high score is not higher than the existing one.")
-                    }
-                }
-
-                override fun onCancelled(databaseError: DatabaseError) {
-                    println("Error reading user data: ${databaseError.message}")
-                }
-            })
-        } else {
-            println("User not authenticated.")
-        }
-    }
 }
