@@ -29,7 +29,6 @@ class Puck(
             Log.d("HighScore", "Current High Score (puck): $highscore")
             highScoreListener?.onHighScoreUpdated(highscore)
 
-            // Reset position
             resetPosition()
 
             return false  // Return false, game is not over

@@ -37,11 +37,11 @@ class PaddleHockey (context: Context, var posX: Float, var posY: Float, var widt
         canvas?.drawCircle(centerX, centerY, outerRadius.toFloat(), paint)
 
         // Inner circle
-        paint.color = Color.BLUE // Change the color for the inner circle (you can use a different color)
+        paint.color = Color.rgb(200,0,0)
         canvas?.drawCircle(centerX, centerY, innerRadius.toFloat(), paint)
 
         // Reset the paint color to the original color
-        paint.color = Color.RED
+        paint.color = Color.rgb(220,0,0)
     }
 
     fun update(){
