@@ -38,8 +38,6 @@ class Puck(
                 speedY *= -1f
             }
         }
-
-
         if (posX - size < 0) {
             this.speedX *= -1f
             this.posX += speedX * 2
@@ -48,7 +46,6 @@ class Puck(
             this.speedX *= -1f
             this.posX += speedX * 2
         }
-
         if (posX > 500f && posX < 800f){
 
 
@@ -65,6 +62,8 @@ class Puck(
         }
         return gameOver
     }
+
+
 
     fun resetPosition() {
         posX = 500f

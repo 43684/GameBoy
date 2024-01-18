@@ -41,8 +41,8 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
-        obstacles.add(Obstacle(685f, 775f, 120f, 120f, Color.BLUE))
-        obstacles.add(Obstacle(162f, 775f, 120f, 120f, Color.BLUE))
+        obstacles.add(Obstacle(1000f, 1050f, 120f, 120f, Color.BLUE))
+        obstacles.add(Obstacle(170f, 1050f, 120f, 120f, Color.BLUE))
         bitmap = BitmapFactory.decodeResource(context.resources,R.drawable.edited2)
         setup()
     }
@@ -55,11 +55,6 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         puck.paint.color = Color.RED
     }
 
-    fun puck(b1: Puck, b2: PaddleHockey) {
-        puck.speedY *= -1
-        paddle1.speedY = 0f
-        paddle2.speedY = 0f
-    }
     fun intersects(puck: Puck, paddle: PaddleHockey) {
         val closestX = clamp(puck.posX, paddle.posX - paddle.width / 2, paddle.posX + paddle.width / 2)
         val closestY = clamp(puck.posY, paddle.posY - paddle.height / 2, paddle.posY + paddle.height / 2)
@@ -70,21 +65,12 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         val distanceSquared = distanceX * distanceX + distanceY * distanceY
 
         if (distanceSquared <= (puck.size / 2) * (puck.size / 2) && !collisionCooldown) {
-            // Handle collision
-            puck(puck, paddle)
+
             if (highscore > 1 && highscore % 2 == 0) {
-                puck.speedX *= 1.1f
+//                puck.speedX *= 1.1f
             }
-            puck.speedY *= 1.1f
-            // Update ball position based on collision point
-            val angle = Math.atan2(distanceY.toDouble(), distanceX.toDouble())
-            val overlap = (puck.size / 2) - sqrt(distanceSquared)
-            val newX = puck.posX + (overlap * Math.cos(angle)).toFloat()
-            val newY = puck.posY + (overlap * Math.sin(angle)).toFloat()
-
-            puck.posX = newX
-            puck.posY = newY
-
+//            puck.speedY *= 1.1f
+            puckCollision(puck, paddle)
             // Set collision cooldown
             collisionCooldown = true
             Handler(Looper.getMainLooper()).postDelayed({
@@ -94,6 +80,32 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
     }
     fun clamp(value: Float, min: Float, max: Float): Float {
         return if (value < min) min else if (value > max) max else value
+    }
+
+    fun puckCollision(puck: Puck, paddle: PaddleHockey) {
+        if (puck.posX < paddle.posX) {
+            // Left side collision
+            if (puck.posY < paddle.posY) {
+                // Top-left corner
+                puck.speedX = abs(puck.speedX) * -1
+                puck.speedY = abs(puck.speedY) * -1
+            } else {
+                // Bottom-left corner
+                puck.speedX = abs(puck.speedX) * -1
+                puck.speedY = abs(puck.speedY)
+            }
+        } else {
+            // Right side collision
+            if (puck.posY > paddle.posY) {
+                // Bottom-right corner
+                puck.speedX = abs(puck.speedX)
+                puck.speedY = abs(puck.speedY)
+            } else {
+                // Top-right corner
+                puck.speedX = abs(puck.speedX)
+                puck.speedY = abs(puck.speedY) * -1
+            }
+        }
     }
     fun start() {
         running = true
@@ -159,8 +171,6 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
             paddle2.posX = touchX
             paddle2.posY = touchY
 
-            puck.posY = touchY
-            puck.posX = touchX
 
         }
         return true
