@@ -8,6 +8,7 @@ import android.graphics.Color
 import android.graphics.Rect
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.MotionEvent
 import android.view.SurfaceHolder
 import android.view.SurfaceView
@@ -34,15 +35,15 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
     var highscore = 0
     var highScoreListener: HighScoreListener? = null
     private var collisionCooldown = false
-    private val collisionCooldownTime = 500L
+    private val collisionCooldownTime = 250L
     var bitmap: Bitmap
     private val obstacles = mutableListOf<Obstacle>()
     init {
         if (mHolder != null) {
             mHolder?.addCallback(this)
         }
-        obstacles.add(Obstacle(1000f, 1050f, 120f, 120f, Color.BLUE))
-        obstacles.add(Obstacle(170f, 1050f, 120f, 120f, Color.BLUE))
+        obstacles.add(Obstacle(585f, 1050f, 120f, 120f, Color.BLUE))
+
         bitmap = BitmapFactory.decodeResource(context.resources,R.drawable.edited2)
         setup()
     }
@@ -51,8 +52,8 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         paddle2 = PaddleHockey(this.context, 500f, 1600f, 200f, 100f, 5f, 5f)
         paddle1.paint.color = Color.RED
         paddle2.paint.color = Color.RED
-        puck = Puck(this.context, listener,500f, 500f, 50f, -5f, 5f)
-        puck.paint.color = Color.RED
+        puck = Puck(this.context, listener,500f, 500f, 50f, -7f, 7f)
+        puck.paint.color = Color.BLACK
     }
 
     fun intersects(puck: Puck, paddle: PaddleHockey) {
@@ -66,12 +67,10 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
 
         if (distanceSquared <= (puck.size / 2) * (puck.size / 2) && !collisionCooldown) {
 
-            if (highscore > 1 && highscore % 2 == 0) {
-//                puck.speedX *= 1.1f
-            }
-//            puck.speedY *= 1.1f
+
             puckCollision(puck, paddle)
-            // Set collision cooldown
+
+
             collisionCooldown = true
             Handler(Looper.getMainLooper()).postDelayed({
                 collisionCooldown = false
@@ -129,16 +128,24 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
 
         if (paddle1.posX - paddle1.width / 2 < bounds.left) {
             paddle1.speedX = abs(paddle1.speedX)  // Bounce off the left wall
-        } else if (paddle1.posX + paddle1.width / 2 > bounds.right) {
+        }
+
+        else if (paddle1.posX + paddle1.width / 2 > bounds.right) {
             paddle1.speedX = -abs(paddle1.speedX)  // Bounce off the right wall
         }
     }
     private fun checkObstacleCollisions() {
+
         for (obstacle in obstacles) {
             if (obstacle.intersects(puck)) {
-                // Adjust puck's speed or direction upon collision with obstacle
-                puck.speedX *= -1f
-                puck.speedY *= -1f
+                val random1 = -1f
+                val random2 = 1f
+
+                val hockeyList = mutableListOf<Float>(random1, random2)
+
+                puck.speedX *= hockeyList.random()
+
+
             }
         }
     }

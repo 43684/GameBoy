@@ -55,11 +55,9 @@ class PlayHockeyFragment : Fragment(), HighScoreListener, GameViewPong.Visibilit
     }
 
     override fun onHighScoreUpdated(highScore: Int) {
-        println("highscore updated, fragment")
         activity?.runOnUiThread {
             binding.textViewPongScore.text = "Score: $highScore"
             binding.tvFinalScore.text = "Final score is: $highScore"
-            println("fragment log score")
 
         }
 
@@ -79,7 +77,6 @@ class PlayHockeyFragment : Fragment(), HighScoreListener, GameViewPong.Visibilit
         activity?.runOnUiThread {
             binding.cwGameOver1.visibility = View.VISIBLE
         }
-        println("Hallo")
     }
 
     interface GameListener {

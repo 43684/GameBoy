@@ -28,19 +28,19 @@ class PaddleHockey (context: Context, var posX: Float, var posY: Float, var widt
     }
 
     fun drawPaddleHockey(canvas: Canvas?) {
-        val outerRadius = min(width, height) / 2 * 1.5 // Adjust the factor for the outer circle size
-        val innerRadius = outerRadius * 0.5 // Adjust the factor for the inner circle size
+        val outerRadius = min(width, height) / 2 * 1.5
+        val innerRadius = outerRadius * 0.5
         val centerX = posX
         val centerY = posY
 
-        // Outer circle (main paddle)
+
         canvas?.drawCircle(centerX, centerY, outerRadius.toFloat(), paint)
 
-        // Inner circle
+
         paint.color = Color.rgb(200,0,0)
         canvas?.drawCircle(centerX, centerY, innerRadius.toFloat(), paint)
 
-        // Reset the paint color to the original color
+
         paint.color = Color.rgb(220,0,0)
     }
 

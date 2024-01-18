@@ -67,11 +67,6 @@ class PlayPongFragment : Fragment(), HighScoreListener, GameViewPong.VisibilityL
         println("Hallo")
     }
 
-
-
-    /***
-     * Här nedan
-     */
     override fun onHighScoreUpdated(highScore: Int) {
         activity?.runOnUiThread {
             binding.textViewPongScore.text = "Score: $highScore"

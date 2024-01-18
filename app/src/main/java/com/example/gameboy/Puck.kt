@@ -26,9 +26,14 @@ class Puck(
         if (posY < bounds.top) {
             //puck has gone outside the top of screen
             highscore++
-            Log.d("HighScore", "Current High Score (puck): $highscore")
+
             highScoreListener?.onHighScoreUpdated(highscore)
 
+            if (highscore >= 0) {
+
+                speedX *= 1.2f
+                speedY *= 1.2f
+            }
             resetPosition()
 
             return false  // Return false, game is not over

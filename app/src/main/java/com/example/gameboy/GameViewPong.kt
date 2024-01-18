@@ -75,7 +75,7 @@ class GameViewPong(context: Context) : SurfaceView(context), SurfaceHolder.Callb
             val distanceSquared = distanceX * distanceX + distanceY * distanceY
 
             if (distanceSquared <= (ball.size / 2) * (ball.size / 2) && !collisionCooldown) {
-                // Handle collision
+
                 ball(ball, paddle)
                 highscore++
                 Log.d("HighScore", "Current High Score: $highscore")
@@ -88,16 +88,6 @@ class GameViewPong(context: Context) : SurfaceView(context), SurfaceHolder.Callb
                 }
 
 
-                // Update ball position based on collision point
-                val angle = atan2(distanceY.toDouble(), distanceX.toDouble())
-                val overlap = (ball.size / 2) - sqrt(distanceSquared)
-                val newX = ball.posX + (overlap * cos(angle)).toFloat()
-                val newY = ball.posY + (overlap * sin(angle)).toFloat()
-
-                ball.posX = newX
-                ball.posY = newY
-
-                // Set collision cooldown
                 collisionCooldown = true
                 Handler(Looper.getMainLooper()).postDelayed({
                     collisionCooldown = false
@@ -164,7 +154,7 @@ class GameViewPong(context: Context) : SurfaceView(context), SurfaceHolder.Callb
 
     override fun run() {
         while (running) {
-            // Log.d("GameView", "Updating and Drawing")
+
             update()
             draw()
             val gameOver = ball.checkBounds(bounds)
@@ -184,7 +174,6 @@ class GameViewPong(context: Context) : SurfaceView(context), SurfaceHolder.Callb
     }
 
     fun onGameOver() {
-        println("onGameOver")
         running = false
         findFragment<PlayPongFragment>().makeVisible()
 
@@ -200,21 +189,21 @@ class GameViewPong(context: Context) : SurfaceView(context), SurfaceHolder.Callb
     fun updateHighScore(newHighScore: Int) {
         val auth: FirebaseAuth = FirebaseAuth.getInstance()
         val database: DatabaseReference = FirebaseDatabase.getInstance().reference
-        // Get the current user's UID from FirebaseAuth
+
         val uid: String? = auth.currentUser?.uid
 
         if (uid != null) {
-            // Reference to the user's data in the Firebase database
+
             val userRef: DatabaseReference = database.child("users").child(uid)
 
-            // Read the current high score from the database
+
             userRef.child("highscore").addListenerForSingleValueEvent(object : ValueEventListener {
                 override fun onDataChange(dataSnapshot: DataSnapshot) {
                     val currentHighScore = dataSnapshot.getValue(Int::class.java)
 
-                    // Check if the new high score is higher than the existing one
+
                     if (currentHighScore == null || newHighScore > currentHighScore) {
-                        // Update the high score in the database
+
                         userRef.child("highscore").setValue(newHighScore)
                             .addOnSuccessListener {
                                 println("High score updated successfully!")
