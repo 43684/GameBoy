@@ -176,6 +176,7 @@ class GameViewHockey(context: Context, var listener: HighScoreListener) : Surfac
         findFragment<PlayHockeyFragment>().makeVisible()
 
 
+
     }
     interface VisibilityListener {
         fun makeVisible()
