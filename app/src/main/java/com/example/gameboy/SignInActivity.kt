@@ -29,22 +29,12 @@ class SignInActivity : AppCompatActivity() {
             val pass = binding.passET.text.toString().trim()
 
             validateData(email,pass)
-            /*if (email.isNotEmpty() && pass.isNotEmpty()) {
+        }
 
-                firebaseAuth.signInWithEmailAndPassword(email, pass).addOnCompleteListener {
-                    if (it.isSuccessful) {
-                        val intent = Intent(this, MainActivity::class.java)
-                        startActivity(intent)
-                        finish()
-                    } else {
-                        Toast.makeText(this, it.exception.toString(), Toast.LENGTH_SHORT).show()
-
-                    }
-                }
-            } else {
-                Toast.makeText(this, "Empty Fields Are not Allowed !!", Toast.LENGTH_SHORT).show()
-
-            }*/
+        binding.button3.setOnClickListener{
+            val intent = Intent(this, GameActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
