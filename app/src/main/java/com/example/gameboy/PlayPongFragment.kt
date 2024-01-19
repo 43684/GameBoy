@@ -10,7 +10,7 @@ import android.widget.FrameLayout
 import androidx.fragment.app.Fragment
 import com.example.gameboy.databinding.FragmentPlayPongBinding
 
-class PlayPongFragment : Fragment(), HighScoreListener, GameView.VisibilityListener {
+class PlayPongFragment : Fragment(), HighScoreListener, GameViewPong.VisibilityListener {
 
     lateinit var binding: FragmentPlayPongBinding
     private lateinit var mediaPlayer: MediaPlayer
@@ -34,7 +34,7 @@ class PlayPongFragment : Fragment(), HighScoreListener, GameView.VisibilityListe
         savedInstanceState: Bundle?
     ): View {
         binding = FragmentPlayPongBinding.inflate(inflater)
-        val gameView = GameView(requireContext())
+        val gameView = GameViewPong(requireContext())
         gameView.highScoreListener = this
         val rootView = binding.root
         val frameLayout = rootView.findViewById<FrameLayout>(R.id.frame5)
@@ -67,11 +67,6 @@ class PlayPongFragment : Fragment(), HighScoreListener, GameView.VisibilityListe
         println("Hallo")
     }
 
-
-
-    /***
-     * Här nedan
-     */
     override fun onHighScoreUpdated(highScore: Int) {
         activity?.runOnUiThread {
             binding.textViewPongScore.text = "Score: $highScore"
@@ -83,9 +78,9 @@ class PlayPongFragment : Fragment(), HighScoreListener, GameView.VisibilityListe
         super.onDetach()
         listener = null
     }
-    interface GameListener{
+    interface GameListener : PlayHockeyFragment.GameListener {
         fun startPong()
-        fun startPongMenu()
+        override fun startPongMenu()
 
     }
 

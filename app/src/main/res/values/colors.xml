@@ -20,6 +20,7 @@
     <color name="orange">#D1871A</color>
     <color name="yellow1">#FDE300</color>
     <color name="clear">#00FFFFFF</color>
+    <color name="transparant">#00FCF8F8</color>
 
 
 </resources>

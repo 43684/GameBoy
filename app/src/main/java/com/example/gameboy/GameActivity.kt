@@ -3,12 +3,15 @@ package com.example.gameboy
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.commit
 import com.example.gameboy.databinding.ActivityGameBinding
 import com.google.firebase.auth.FirebaseAuth
 
-class GameActivity : AppCompatActivity(), PlayPongFragment.GameListener,
+class GameActivity : AppCompatActivity(), PlayPongFragment.GameListener,PlayHockeyFragment.GameListener,
     GameSelectFragment.GameListener {
+
+    var hasNoUser = false
 
     lateinit var binding: ActivityGameBinding
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -16,7 +19,14 @@ class GameActivity : AppCompatActivity(), PlayPongFragment.GameListener,
 
         binding = ActivityGameBinding.inflate(layoutInflater)
 
+
         setContentView(binding.root)
+
+        hasNoUser = (FirebaseAuth.getInstance().currentUser == null)
+
+        if (hasNoUser) {
+            binding.logoutButton.setText("Turn Back")
+        }
 
         supportFragmentManager.commit {
             replace(R.id.frame3, GameSelectFragment())
@@ -31,6 +41,7 @@ class GameActivity : AppCompatActivity(), PlayPongFragment.GameListener,
         supportFragmentManager.commit {
             replace(R.id.frame3, PlayPongFragment())
         }
+
     }
 
     override fun startPongMenu() {
@@ -43,6 +54,7 @@ class GameActivity : AppCompatActivity(), PlayPongFragment.GameListener,
         supportFragmentManager.commit {
             replace(R.id.frame3, PlayHockeyFragment())
         }
+
     }
 
     fun logoutUser() {
